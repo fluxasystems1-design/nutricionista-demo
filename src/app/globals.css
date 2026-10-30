@@ -1,26 +1,211 @@
 @import "tailwindcss";
+/* Paleta Bloom Parenting: lila, mantequilla, oliva, rosa y marrón. */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cream: #f7f4ec;
+  --paper: #fffdf8;
+  --ink: #3d2916;
+  --forest: #4a2713;
+  --lagoon: #6e4630;
+  --lilac: #bec1f4;
+  --lilac-2: #d5d6f8;
+  --butter: #ffffcd;
+  --butter-deep: #f3f0a8;
+  --olive: #b2bb68;
+  --blush: #f8bad1;
+  --sage: #eef2c9;
+  --muted: #8a684c;
+  --background: var(--cream);
+  --foreground: var(--ink);
 }
 
 @theme inline {
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-forest: var(--forest);
+  --color-lagoon: var(--lagoon);
+  --color-lilac: var(--lilac);
+  --color-lilac-2: var(--lilac-2);
+  --color-butter: var(--butter);
+  --color-butter-deep: var(--butter-deep);
+  --color-olive: var(--olive);
+  --color-blush: var(--blush);
+  --color-sage: var(--sage);
+  --color-muted: var(--muted);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-jakarta);
+  --font-display: var(--font-fraunces);
+  --font-price: var(--font-archivo);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-jakarta), system-ui, sans-serif;
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--lilac) 70%, white);
+  color: var(--forest);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--forest);
+  outline-offset: 3px;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 36s linear infinite;
+}
+
+.animate-marquee-stories {
+  animation: marquee 90s linear infinite;
+}
+
+.stories-rail:hover .animate-marquee-stories {
+  animation-play-state: paused;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(var(--spin, 0deg));
+  }
+  50% {
+    transform: translate3d(10px, -16px, 0) rotate(calc(var(--spin, 0deg) + 8deg));
+  }
+}
+
+.animate-drift {
+  animation: drift 8.5s ease-in-out infinite;
+}
+
+@keyframes drift-slow {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-14px, 12px, 0) scale(1.06);
+  }
+}
+
+.animate-drift-slow {
+  animation: drift-slow 12s ease-in-out infinite;
+}
+
+.hero-lockup {
+  width: min(100%, calc(100vw - 2.5rem));
+}
+
+@media (min-width: 768px) {
+  .hero-lockup {
+    width: 100%;
+  }
+}
+
+.on-pink {
+  color: #381018;
+}
+
+.on-pink .text-forest,
+.on-pink .text-forest\/70,
+.on-pink .text-forest\/80,
+.on-pink .text-ink,
+.on-pink .text-ink\/80,
+.on-pink .text-ink\/85,
+.on-pink .text-muted {
+  color: #381018;
+}
+
+.on-pink .text-olive {
+  color: #b03040;
+}
+
+.gals-type {
+  font-family: var(--font-poppins), system-ui, sans-serif;
+}
+
+.gals-type .font-display {
+  font-family: var(--font-archivo), sans-serif !important;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.gals-type .font-display.italic {
+  font-family: var(--font-caveat), cursive !important;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.gals-type .font-display.italic.text-4xl,
+.gals-type .font-display.italic.text-5xl,
+.gals-type .font-display.italic.text-6xl,
+.gals-type .font-display.italic.text-7xl,
+.gals-type .font-display.italic.md\:text-4xl,
+.gals-type .font-display.italic.md\:text-5xl,
+.gals-type .font-display.italic.md\:text-6xl,
+.gals-type .font-display.italic.md\:text-7xl,
+.gals-type .font-display.italic.text-\[18vw\],
+.gals-type .font-display.italic.text-\[7\.5rem\],
+.gals-type .font-display.italic.md\:text-\[12rem\] {
+  font-family: var(--font-archivo), sans-serif !important;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+}
+
+.gals-type a.font-display.italic,
+.gals-type button.font-display.italic {
+  font-family: var(--font-caveat), cursive !important;
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.field-lines {
+  background-image: repeating-linear-gradient(
+    -14deg,
+    transparent 0 13px,
+    color-mix(in srgb, currentColor 16%, transparent) 13px 14px
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-marquee,
+  .animate-marquee-stories,
+  .animate-drift,
+  .animate-drift-slow {
+    animation: none;
+  }
+
+  .stories-rail {
+    overflow-x: auto;
+  }
 }

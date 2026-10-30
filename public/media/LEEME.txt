@@ -1,0 +1,14 @@
+Suelta aquí las fotos y los videos de cada página.
+Cada carpeta corresponde a una ruta del sitio. Lo que dejes dentro se usa solo en esa página.
+
+homepage/                          → inicio (/)
+vacaciones-sin-restriccion/        → /vacaciones-sin-restriccion
+hazte-amiga-de-tus-hormonas/       → /hazte-amiga-de-tus-hormonas
+acompanamiento-90-dias/            → /acompanamiento-90-dias
+
+Dentro de cada una:
+  imagenes/   jpg, png, webp
+  videos/     mp4, webm
+
+Nombra el archivo con lo que es, por ejemplo retrato-mafe.jpg o testimonio-ana.mp4.
+Cuando los subas, avisa y los coloco en esa landing.
