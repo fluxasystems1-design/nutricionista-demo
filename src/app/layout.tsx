@@ -38,13 +38,33 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
+const siteUrl = "https://nutricionista-demo-six.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: "Mafe Cerquera · Nutrición integral",
     template: "%s · Mafe Cerquera",
   },
   description:
     "Nutrición funcional y digestiva. Entiende tu cuerpo, deja las restricciones y encuentra tu mejor versión.",
+  openGraph: {
+    type: "website",
+    locale: "es_CO",
+    siteName: "Mafe Cerquera",
+    images: [
+      {
+        url: "/og.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Mafe Cerquera con un desayuno",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/og.jpg"],
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
