@@ -210,16 +210,16 @@ function RedIcon({ name }: { name: "instagram" | "tiktok" | "whatsapp" }) {
 
 function Hero() {
   return (
-    <section className="relative isolate min-h-[92svh] overflow-hidden text-[#f7f4ec]">
+    <section className="relative isolate overflow-hidden bg-[#1a100c] text-[#f7f4ec] md:min-h-[92svh]">
       <img
         src="/media/acompanamiento-90-dias/hero.jpg"
         alt=""
-        width={1200}
-        height={800}
-        className="absolute inset-0 h-full w-full object-cover object-[42%_30%] md:object-[68%_42%]"
+        width={1024}
+        height={679}
+        className="relative h-auto w-full md:absolute md:inset-0 md:h-full md:object-cover md:object-[68%_42%]"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1a100c]/72 via-[#1a100c]/28 to-transparent md:bg-gradient-to-r md:from-[#1a100c]/75 md:via-[#1a100c]/30 md:to-transparent" />
-      <div className="relative z-10 mx-auto flex min-h-[92svh] max-w-6xl items-end px-5 py-16 md:items-center md:px-8 md:py-20">
+      <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-[#1a100c]/75 via-[#1a100c]/30 to-transparent md:block" />
+      <div className="relative z-10 mx-auto max-w-6xl px-5 pt-8 pb-10 md:flex md:min-h-[92svh] md:items-center md:px-8 md:py-20">
         <Reveal className="max-w-xl">
           <h1 className="font-display text-5xl leading-[0.9] md:text-7xl">
             Comer bien no debería sentirse tan complicado.
@@ -698,13 +698,15 @@ function Cierre() {
             <Pill href="#inscripcion" tone="pine">Quiero comenzar con Mafer</Pill>
           </div>
         </Reveal>
-        <img
-          src="/media/acompanamiento-90-dias/mafer-tablet.png"
-          alt="Mafer Cerquera con su tablet"
-          width={980}
-          height={1024}
-          className="mx-auto w-[min(86%,320px)] drop-shadow-[0_18px_28px_rgba(13,51,51,0.16)] md:mx-0 md:w-full md:max-w-[380px] md:justify-self-end"
-        />
+        <figure className="mx-auto mb-12 w-[min(86%,300px)] -rotate-2 bg-[#fffdf8] p-2.5 pb-10 shadow-[0_18px_36px_rgba(13,51,51,0.16)] md:mx-0 md:mb-16 md:w-full md:max-w-[340px] md:justify-self-end md:p-3 md:pb-12">
+          <img
+            src="/media/acompanamiento-90-dias/cierre-mafe.png"
+            alt="Mafe Cerquera con una tabla de verduras"
+            width={550}
+            height={826}
+            className="block h-auto w-full"
+          />
+        </figure>
       </div>
     </section>
   );
