@@ -726,7 +726,7 @@ const TESTIMONIOS = [
 
 const MARQUEE_SPEED = 36;
 
-function useMarqueeSpeed(trackRef: { current: HTMLDivElement | null }, reduce: boolean) {
+function useMarqueeSpeed(trackRef: { current: HTMLDivElement | null }, reduce: boolean | null) {
   useEffect(() => {
     const track = trackRef.current;
     if (!track || reduce) return;
