@@ -3,10 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { PngSticker } from "@/components/png-sticker";
-import { Header, Pill } from "@/components/chrome";
+import { Header } from "@/components/chrome";
 import { Marquee, Reveal } from "@/components/motion";
 import {
-  CREDENCIALES,
   ENFOQUE,
   INSTAGRAM,
   LADY_BOSS,
@@ -15,37 +14,6 @@ import {
   TIKTOK,
   WHATSAPP,
 } from "@/lib/site";
-
-const PLANES = [
-  {
-    name: "Iniciemos juntos",
-    price: PRECIOS.consultaInicio.cop,
-    extra: `COP · ${PRECIOS.consultaInicio.eur}`,
-    items: [
-      "Valoración nutricional",
-      "Evaluación y profundización de tu caso",
-      "Plan de alimentación y suplementación",
-      "Recetario: desayunos, almuerzos, cenas, snacks y smoothies verdes",
-      "Prescripción de exámenes de laboratorio",
-    ],
-  },
-  {
-    name: "Basic",
-    price: PRECIOS.consultaBasic.cop,
-    extra: `COP · ${PRECIOS.consultaBasic.eur}`,
-    items: ["Todo lo de Iniciemos juntos", "Lectura de etiquetas", "Consulta de control (20 días aprox.)"],
-    featured: true,
-  },
-  {
-    name: "Premium",
-    price: PRECIOS.consultaPremium.cop,
-    extra: `COP · ${PRECIOS.consultaPremium.eur}`,
-    items: [
-      "Todo lo de Basic",
-      "Consulta de psicología: ansiedad, estrés, TCA y más",
-    ],
-  },
-];
 
 const slideEase = [0.25, 0.1, 0.25, 1] as const;
 
@@ -57,22 +25,17 @@ export function HomePage() {
         links={[
           { href: "#programas", label: "Programas" },
           { href: "#enfoque", label: "Enfoque" },
-          { href: "#historia", label: "Historia" },
-          { href: "#planes", label: "Planes" },
           { href: "#voces", label: "Voces" },
         ]}
         cta={{ href: "#programas", label: "Quiero empezar" }}
       />
       <main className="gals-type">
         <Hero />
+        <Mejorar />
         <Caminos />
-        <Promesa />
+        <Historias />
         <SeparadorPromesa />
         <Enfoque />
-        <Catalogo />
-        <Separador />
-        <Historia />
-        <Planes />
         <Marquee
           face="display"
           mark="★"
@@ -86,128 +49,250 @@ export function HomePage() {
             "escuchar el cuerpo",
           ]}
         />
-        <Historias />
-        <Cierre />
         <Credenciales />
+        <CierreComunidad />
       </main>
       <Pie />
     </>
   );
 }
 
-const FOTOS_PROMESA = [
-  "/media/hazte-amiga-de-tus-hormonas/imagenes/separador.jpg",
-  "/media/acompanamiento-90-dias/separador-desayuno.jpg",
-  "/media/vacaciones-sin-restriccion/imagenes/lista-espera.jpg",
-];
-
 function SeparadorPromesa() {
+  return (
+    <section className="relative overflow-hidden">
+      <img
+        src="/media/home/separador-cambio.jpg"
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover object-[center_42%]"
+      />
+      <div className="relative flex min-h-[30rem] items-center justify-center px-5 py-14 md:min-h-[34rem] md:px-8">
+        <div className="w-full max-w-xl rounded-[1.75rem] bg-[#fffdf8]/90 px-6 py-8 text-center shadow-[0_18px_40px_rgba(13,51,51,0.16)] backdrop-blur-[2px] md:px-10 md:py-10">
+          <p className="font-display text-[1.9rem] leading-[1.02] text-[#0d3333] md:text-5xl">
+            Solo tú puedes iniciar este cambio.
+          </p>
+          <p className="mt-4 text-xl leading-snug font-semibold text-[#0d3333] md:text-[1.65rem]">
+            No se trata de restringirte. Se trata de conectar con tu cuerpo.
+          </p>
+          <p className="mt-5 font-display text-[1.85rem] leading-tight text-[#0d3333] italic md:text-4xl">
+            Aquí te espero para empezarlo juntas.
+          </p>
+          <a
+            href="#programas"
+            className="mt-6 inline-flex items-center justify-center rounded-full bg-black px-7 py-3.5 text-sm font-semibold tracking-[0.08em] text-white uppercase"
+          >
+            Comenzar
+          </a>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CarruselEnfoque() {
   const reduce = useReducedMotion();
   const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || paused) return;
     const id = window.setInterval(() => {
-      setIndex((current) => (current + 1) % FOTOS_PROMESA.length);
-    }, 3000);
+      setIndex((current) => (current + 1) % ENFOQUE.length);
+    }, 4500);
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, [reduce, paused]);
+
+  const items = reduce
+    ? ENFOQUE.map((text, i) => ({ text, n: String(i + 1).padStart(2, "0") }))
+    : Array.from({ length: 4 }, (_, offset) => {
+        const i = (index + offset) % ENFOQUE.length;
+        return { text: ENFOQUE[i], n: String(i + 1).padStart(2, "0") };
+      });
 
   return (
-    <div className="relative h-44 overflow-hidden md:h-64" aria-hidden>
-      {FOTOS_PROMESA.map((src, i) => (
-        <img
-          key={src}
-          src={src}
-          alt=""
-          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${i === index ? "opacity-100" : "opacity-0"} ${i === 2 ? "object-[center_62%]" : "object-center"}`}
-        />
-      ))}
-    </div>
-  );
-}
-
-function Separador() {
-  return (
-    <div className="relative h-44 overflow-hidden md:h-64" aria-hidden>
-      <img
-        src="/media/home/separador.jpg"
-        alt=""
-        width={2000}
-        height={1100}
-        className="absolute inset-0 h-full w-full object-cover object-[center_45%]"
-      />
-    </div>
-  );
-}
-
-function Fila({ n, text, delay }: { n: string; text: string; delay: number }) {
-  const reduce = useReducedMotion();
-
-  return (
-    <motion.li
-      initial={reduce ? false : { opacity: 0, x: "-100%" }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-      transition={{ duration: 0.6, delay, ease: slideEase }}
-      className="flex items-start gap-3 rounded-[1.35rem] bg-white px-5 py-4 shadow-[0_8px_22px_rgba(13,51,51,0.08)]"
+    <ul
+      className="relative mt-8 grid gap-3 overflow-hidden md:grid-cols-2 lg:grid-cols-4"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
     >
-      <span className="font-display text-2xl leading-none text-[#b2bb68] italic">{n}</span>
-      <span className="min-w-0 text-sm leading-relaxed text-[#3d2916] md:text-base">{text}</span>
-    </motion.li>
+      <AnimatePresence mode="popLayout" initial={false}>
+        {items.map((item) => (
+          <motion.li
+            key={item.n}
+            layout
+            initial={reduce ? false : { opacity: 0, y: 36 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -36 }}
+            transition={{ duration: 0.5, ease: slideEase }}
+            className="flex items-start gap-3 rounded-[1.35rem] bg-white px-5 py-4 shadow-[0_8px_22px_rgba(13,51,51,0.08)]"
+          >
+            <span className="font-display text-2xl leading-none text-[#b2bb68] italic">{item.n}</span>
+            <span className="min-w-0 text-sm leading-relaxed text-[#3d2916] md:text-base">{item.text}</span>
+          </motion.li>
+        ))}
+      </AnimatePresence>
+    </ul>
   );
 }
 
 const CAMINOS = [
   {
+    href: ROUTES.acompanamiento,
+    kicker: "Consulta privada · 90 días",
+    title: "Consulta 1:1",
+    price: `${PRECIOS.acompanamiento.cop} · ${PRECIOS.acompanamiento.eur}`,
+    image: "/media/home/camino-consulta.jpg",
+    imageClass: "object-center",
+    aspect: "aspect-[1024/677]",
+    alt: "Mafe Cerquera en su sala",
+    panel: true,
+  },
+  {
     href: ROUTES.vacaciones,
     kicker: "Reto · 5 días",
     title: "Vacaciones sin restricción",
     price: `Desde ${PRECIOS.vacacionesBasico.cop} · ${PRECIOS.vacacionesBasico.eur}`,
-    image: "/media/home/camino-vacaciones.png",
-    imageClass: "object-[center_18%]",
+    image: "/media/home/camino-vacaciones.jpg",
+    imageClass: "object-[center_22%]",
+    aspect: "aspect-[3/4]",
+    alt: "Mafe Cerquera en su sala",
+    panel: true,
   },
   {
     href: ROUTES.hormonas,
     kicker: "Programa · 4 semanas",
     title: "Hazte amiga de tus hormonas",
     price: `Desde ${PRECIOS.hormonasBasico.usd} USD · ${PRECIOS.hormonasBasico.eur}`,
-    image: "/media/home/camino-hormonas.png",
-    imageClass: "object-[center_22%]",
-  },
-  {
-    href: ROUTES.acompanamiento,
-    kicker: "Consulta privada · 90 días",
-    title: "Consulta 1:1",
-    price: `${PRECIOS.acompanamiento.cop} · ${PRECIOS.acompanamiento.eur}`,
-    image: "/media/home/camino-consulta.png",
-    imageClass: "object-[center_20%]",
+    image: "/media/home/camino-hormonas.jpg",
+    imageClass: "object-top",
+    aspect: "aspect-[3/4]",
+    alt: "Mafe Cerquera en su cocina",
+    panel: true,
   },
 ];
 
+const MEJORAR = [
+  {
+    href: ROUTES.acompanamiento,
+    title: "Mi digestión",
+    text: "Siéntete más cómoda al comer",
+    image: "/media/home/logo-digestion.png",
+    logo: "left",
+  },
+  {
+    href: ROUTES.acompanamiento,
+    title: "Mi cuerpo",
+    text: "Avanza hacia tus objetivos físicos",
+    image: "/media/home/logo-cuerpo.png",
+    logo: "right",
+  },
+  {
+    href: ROUTES.hormonas,
+    title: "Mis hormonas",
+    text: "Comprende mejor tu ciclo",
+    image: "/media/home/logo-hormonas.png",
+    logo: "left",
+  },
+  {
+    href: ROUTES.vacaciones,
+    title: "Mis hábitos",
+    text: "Quiero comer mejor sin vivir haciendo dietas.",
+    image: "/media/home/logo-habitos.png",
+    logo: "right",
+  },
+] as const;
+
+function Mejorar() {
+  return (
+    <section className="bg-[#e2d5e8] px-5 pt-10 pb-0 md:px-10 md:pt-14 md:pb-0">
+      <div className="mx-auto max-w-xl md:max-w-4xl">
+        <h2 className="text-center font-display text-[2rem] leading-[0.95] text-[#0d3333] md:text-[2.4rem]">
+          ¿Qué quieres mejorar?
+        </h2>
+        <p className="mt-3 text-center text-[0.95rem] leading-relaxed text-[#0d3333]/80">
+          Elige el camino que más conecta contigo.
+        </p>
+        <div className="mt-8 flex flex-col gap-3 md:mt-10 md:grid md:grid-cols-2 md:gap-4">
+          {MEJORAR.map((item) => (
+            <a
+              key={item.title}
+              href={item.href}
+              className="flex items-center gap-3 rounded-[1.35rem] border border-[#0d3333]/20 bg-[#fffdf8] px-3 py-2.5 shadow-[0_8px_20px_rgba(13,51,51,0.06)]"
+            >
+              <img
+                src={item.image}
+                alt=""
+                className={`h-16 w-16 shrink-0 object-contain ${item.logo === "right" ? "order-2 md:order-none" : ""}`}
+              />
+              <span className={`min-w-0 flex-1 ${item.logo === "right" ? "order-1 text-right md:order-none md:text-left" : ""}`}>
+                <span className="block font-display text-[1.35rem] leading-[0.95] text-[#0d3333]">
+                  {item.title}
+                </span>
+                <span className="mt-1 block text-[0.9rem] leading-snug text-[#0d3333]/80">{item.text}</span>
+              </span>
+              <span aria-hidden className="order-3 grid h-8 w-8 shrink-0 place-items-center rounded-full text-lg text-[#0d3333]">
+                →
+              </span>
+            </a>
+          ))}
+        </div>
+        <div className="relative z-10 mx-auto mt-8 -mb-8 md:max-w-xl" aria-hidden>
+          <div className="flex items-center gap-2 rounded-full bg-[#fffdf8] py-2.5 pr-2.5 pl-2.5 shadow-[0_14px_32px_rgba(13,51,51,0.14)]">
+            <p className="min-w-0 truncate rounded-2xl bg-[#0d3333] px-4 py-2.5 text-[0.98rem] font-semibold text-[#fffdf8]">
+              Tres formas de empezar
+            </p>
+            <span className="ml-auto grid h-10 w-10 shrink-0 place-items-center text-[#0d3333]/45">
+              <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+                <rect x="9" y="3" width="6" height="11" rx="3" />
+                <path d="M6 11a6 6 0 0 0 12 0M12 17v3" />
+              </svg>
+            </span>
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#eeedeb] text-[#0d3333]/55">
+              <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden>
+                <path d="M6 6l12 12M18 6 6 18" />
+              </svg>
+            </span>
+          </div>
+          <span className="absolute top-full left-1/2 -translate-x-1/2 -translate-y-1/2 text-[1.65rem] leading-none text-[#7f93c9]">★</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TarjetaCamino({ item, wide = false }: { item: (typeof CAMINOS)[number]; wide?: boolean }) {
+  return (
+    <a
+      href={item.href}
+      className={`flex flex-col overflow-hidden rounded-[1.6rem] border-2 border-[#0d3333] bg-[#111] text-white ${wide ? "md:flex-row" : ""}`}
+    >
+      <img
+        src={item.image}
+        alt={item.alt}
+        className={`${item.aspect} w-full object-cover ${item.imageClass} ${wide ? "md:aspect-auto md:h-auto md:w-[56%] md:shrink-0 md:self-center" : ""}`}
+      />
+      <div className={`flex flex-1 flex-col px-4 pt-4 pb-4 ${wide ? "md:justify-center md:px-10 md:py-8" : ""}`}>
+        <p className="text-[0.68rem] font-semibold tracking-[0.16em] text-white/75 uppercase">{item.kicker}</p>
+        <p className={`mt-2 font-display text-[1.7rem] leading-[0.95] ${wide ? "" : "min-h-[3.25rem]"}`}>{item.title}</p>
+        <p className="mt-2 text-sm text-white/80">{item.price}</p>
+        <span className={`mt-4 inline-flex items-center justify-center rounded-full bg-[#e7ef9a] px-5 py-3 text-sm font-semibold tracking-[0.14em] text-[#0d3333] uppercase ${wide ? "md:w-fit md:px-8" : ""}`}>
+          Ver plan
+        </span>
+      </div>
+    </a>
+  );
+}
+
 function Caminos() {
   return (
-    <section id="landings" className="relative scroll-mt-24 overflow-x-clip bg-[#eeedeb] px-5 pt-8 pb-2 md:px-8 md:pt-12">
+    <section id="programas" className="relative scroll-mt-24 overflow-x-clip bg-[#eeedeb] px-5 pt-16 pb-2 md:px-8 md:pt-20">
       <div className="relative mx-auto max-w-6xl">
-      <div className="grid gap-4 md:grid-cols-3 md:gap-5">
-        {CAMINOS.map((item) => (
-          <a
-            key={item.href}
-            href={item.href}
-            className="group relative flex min-h-[28rem] flex-col overflow-hidden rounded-[1.6rem] border-2 border-[#0d3333] transition-transform duration-300 hover:scale-[1.02] md:min-h-[34rem]"
-          >
-            <img src={item.image} alt="" className={`absolute inset-0 h-full w-full object-cover ${item.imageClass}`} />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/10 to-black/60" />
-            <div className="relative flex flex-1 flex-col px-4 pt-5 pb-4 text-center text-white md:px-5 md:pt-6">
-              <p className="text-[0.68rem] font-semibold tracking-[0.18em] uppercase">{item.kicker}</p>
-              <p className="mt-4 font-display text-[1.7rem] leading-[0.95] uppercase md:text-4xl">{item.title}</p>
-              <p className="mt-2 text-sm text-white/85">{item.price}</p>
-              <span className="mt-auto inline-flex items-center justify-center rounded-full bg-[#e7ef9a] px-5 py-3 text-sm font-semibold tracking-[0.14em] text-[#0d3333] uppercase">
-                Ver plan
-              </span>
-            </div>
-          </a>
-        ))}
+      <div className="flex flex-col gap-4 md:gap-5">
+        <TarjetaCamino item={CAMINOS[0]} wide />
+        <div className="grid gap-4 md:grid-cols-2 md:gap-5">
+          {CAMINOS.slice(1).map((item) => (
+            <TarjetaCamino key={item.href} item={item} />
+          ))}
+        </div>
       </div>
       </div>
       <div className="relative h-40 md:h-48">
@@ -240,8 +325,11 @@ function Caminos() {
 function Hero() {
   const reduce = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
   const userSet = useRef(false);
   const [sound, setSound] = useState(false);
+  const [focus, setFocus] = useState(false);
+  const [hold, setHold] = useState(0);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -261,6 +349,35 @@ function Hero() {
     };
   }, [reduce]);
 
+  useEffect(() => {
+    if (!focus) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") closeFocus();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [focus]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || reduce) return;
+    const leave = () => {
+      if (document.fullscreenElement === video) return;
+      video.controls = false;
+    };
+    document.addEventListener("fullscreenchange", leave);
+    video.addEventListener("webkitendfullscreen", leave);
+    return () => {
+      document.removeEventListener("fullscreenchange", leave);
+      video.removeEventListener("webkitendfullscreen", leave);
+    };
+  }, [reduce]);
+
   const toggleSound = () => {
     const video = videoRef.current;
     if (!video) return;
@@ -274,15 +391,72 @@ function Hero() {
     setSound(!nextMuted);
   };
 
-  return (
-    <section id="inicio" className="overflow-x-clip bg-[#e2d5e8] px-4 pt-20 md:px-10 md:pt-24 lg:px-16">
-      <h1 className="sr-only">Mafe Cerquera, nutricionista funcional y digestiva</h1>
-      <div className="relative mx-auto max-w-7xl">
-      <div className="relative z-10 rounded-[1.95rem] bg-[#fffdf8] p-1.5 shadow-[0_16px_36px_rgba(13,51,51,0.16)] md:rounded-[2.25rem] md:p-2">
+  const playWithSound = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    userSet.current = true;
+    video.muted = false;
+    video.volume = 1;
+    void video.play();
+    setSound(true);
+  };
+
+  const closeFocus = () => {
+    const video = videoRef.current;
+    setFocus(false);
+    if (!video) return;
+    video.muted = true;
+    setSound(false);
+  };
+
+  const openFullscreen = (event: { stopPropagation: () => void }) => {
+    event.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+    const ios = video as HTMLVideoElement & { webkitEnterFullscreen?: () => void };
+    if (typeof ios.webkitEnterFullscreen === "function" && /iP(hone|ad|od)/.test(navigator.userAgent)) {
+      ios.webkitEnterFullscreen();
+      return;
+    }
+    video.controls = true;
+    void video.requestFullscreen?.().catch(() => {
+      if (!reduce) video.controls = false;
+      ios.webkitEnterFullscreen?.();
+    });
+  };
+
+  const onVideoClick = () => {
+    if (reduce) return;
+    const mobile = window.matchMedia("(max-width: 767px)").matches;
+    if (mobile) {
+      if (focus) {
+        closeFocus();
+        return;
+      }
+      setHold(frameRef.current?.offsetHeight ?? 0);
+      setFocus(true);
+      playWithSound();
+      return;
+    }
+    const video = videoRef.current;
+    if (!video || !video.muted) return;
+    toggleSound();
+  };
+
+  const frame = (
+      <div
+        ref={frameRef}
+        className={
+          focus
+            ? "fixed top-[36%] left-1/2 z-[90] w-[calc(100vw-0.75rem)] -translate-x-1/2 -translate-y-1/2 md:static md:top-auto md:left-auto md:z-10 md:w-auto md:translate-x-0 md:translate-y-0"
+            : "relative z-10"
+        }
+      >
+      <div className="rounded-[1.95rem] bg-[#fffdf8] p-1.5 shadow-[0_16px_36px_rgba(13,51,51,0.16)] md:rounded-[2.25rem] md:p-2">
       <div className="relative overflow-hidden rounded-[1.6rem] bg-black md:rounded-[1.85rem]">
       <video
         ref={videoRef}
-        className="aspect-video w-full bg-black object-contain"
+        className="w-full aspect-video bg-black object-contain"
         autoPlay={!reduce}
         muted
         loop
@@ -290,11 +464,7 @@ function Hero() {
         controls={!!reduce}
         preload="metadata"
         aria-label="Mafe Cerquera en su cocina"
-        onClick={() => {
-          const video = videoRef.current;
-          if (!video || !video.muted || reduce) return;
-          toggleSound();
-        }}
+        onClick={onVideoClick}
       >
         <source src="/media/home/hero.mp4" type="video/mp4" />
       </video>
@@ -303,7 +473,7 @@ function Hero() {
           type="button"
           onClick={(event) => {
             event.stopPropagation();
-            toggleSound();
+            onVideoClick();
           }}
           className="absolute top-1/2 left-1/2 z-20 w-[min(16rem,calc(100%-2.5rem))] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-[#f7f4ec] px-5 py-3 text-center text-[#0d3333] shadow-[0_14px_32px_rgba(13,51,51,0.2)]"
         >
@@ -312,6 +482,16 @@ function Hero() {
         </button>
       ) : null}
 
+      {!reduce ? (
+        <button
+          type="button"
+          onClick={openFullscreen}
+          aria-label="Ver en pantalla completa"
+          className="absolute top-3 right-3 z-20 grid h-11 w-11 place-items-center rounded-full bg-[#0d3333]/80 text-[#fffdf8] shadow-[0_8px_18px_rgba(13,51,51,0.28)] md:top-4 md:right-4"
+        >
+          <ExpandIcon />
+        </button>
+      ) : null}
       {!reduce && sound ? (
         <button
           type="button"
@@ -328,6 +508,26 @@ function Hero() {
       ) : null}
       </div>
       </div>
+      </div>
+  );
+
+  return (
+    <section
+      id="inicio"
+      className={`bg-[#e2d5e8] px-1.5 pt-20 md:overflow-x-clip md:px-10 md:pt-24 lg:px-16 ${focus ? "overflow-visible" : "overflow-x-clip"}`}
+    >
+      <h1 className="sr-only">Mafe Cerquera, nutricionista funcional y digestiva</h1>
+      {focus ? (
+        <button
+          type="button"
+          className="fixed inset-0 z-[80] bg-black/95 md:hidden"
+          aria-label="Cerrar el video"
+          onClick={closeFocus}
+        />
+      ) : null}
+      <div className="relative mx-auto max-w-7xl">
+      {focus ? <div className="md:hidden" style={{ height: hold }} aria-hidden /> : null}
+      {frame}
       <PngSticker src="/stickers/sol-luna.png" className="top-2 -left-16 hidden w-32 md:top-4 md:-left-[7.5rem] md:block md:w-44" rotate={-14} />
       <PngSticker src="/stickers/pomelo.png" className="top-1 -right-14 hidden w-28 md:top-2 md:-right-[7rem] md:block md:w-40" rotate={16} delay={0.08} />
       <PngSticker src="/stickers/peonia.png" className="bottom-1 -left-16 hidden w-32 md:bottom-2 md:-left-[7.5rem] md:block md:w-48" rotate={10} delay={0.12} />
@@ -335,7 +535,39 @@ function Hero() {
       <PngSticker src="/stickers/luna.png" className="-right-14 bottom-0 hidden w-28 md:-right-[7rem] md:bottom-1 md:block md:w-40" rotate={16} delay={0.2} />
       </div>
 
-      <div className="-mx-4 mt-5 md:-mx-10 lg:-mx-16">
+      <div
+        className={`px-5 text-center md:hidden ${focus ? "fixed inset-x-0 bottom-0 z-[85] bg-black pt-4" : "pt-6 pb-1"}`}
+        style={focus ? { top: "calc(36% + ((100vw - 1.5rem) * 0.5625 + 0.75rem) / 2)" } : undefined}
+      >
+        <p className={`text-[0.68rem] font-semibold tracking-[0.16em] uppercase ${focus ? "text-white" : "text-[#0d3333]"}`}>
+          Nutrición funcional y digestiva
+        </p>
+        <p className={`mt-3 font-display text-[2.35rem] leading-[0.95] ${focus ? "text-white" : "text-[#0d3333]"}`}>
+          Sentirte bien empieza desde adentro.
+        </p>
+        <p className={`mt-3 text-[0.95rem] leading-relaxed ${focus ? "text-white/90" : "text-[#0d3333]/80"}`}>
+          Cuida tu digestión, transforma tus hábitos y trabaja por tus objetivos físicos sin vivir entre dietas y restricciones.
+        </p>
+        <a
+          href="#programas"
+          className={`mt-5 inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-semibold tracking-[0.06em] uppercase ${focus ? "bg-white text-black" : "bg-black text-white"}`}
+        >
+          Explorar programas
+          <span aria-hidden>→</span>
+        </a>
+        {focus ? (
+          <button
+            type="button"
+            onClick={closeFocus}
+            className="mx-auto mt-3 flex w-fit items-center gap-1 rounded-full border border-white/35 bg-white/10 px-3 py-1.5 text-[0.68rem] font-semibold tracking-[0.08em] text-white uppercase"
+          >
+            <span aria-hidden>←</span>
+            Volver
+          </button>
+        ) : null}
+      </div>
+
+      <div className="-mx-1.5 mt-5 md:-mx-10 lg:-mx-16">
         <Marquee
           face="display"
           compact
@@ -356,6 +588,14 @@ function Hero() {
   );
 }
 
+function ExpandIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
+      <path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5" />
+    </svg>
+  );
+}
+
 function SoundIcon() {
   return (
     <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
@@ -365,202 +605,22 @@ function SoundIcon() {
   );
 }
 
-function Promesa() {
-  const barras = ["Tu cuerpo", "lleva tiempo", "tratando de", "decirte algo"];
-
-  return (
-    <section className="relative overflow-x-clip bg-[#e2d5e8]">
-      <PngSticker src="/stickers/granada.png" className="top-6 -left-6 hidden w-32 md:top-10 md:left-1 md:block md:w-48" rotate={-16} />
-      <PngSticker src="/stickers/higo.png" className="bottom-4 -left-8 w-28 md:bottom-8 md:left-0 md:w-44" rotate={18} delay={0.08} />
-      <PngSticker src="/stickers/miel.png" className="top-10 -right-8 hidden w-32 md:top-16 md:right-0 md:block md:w-48" rotate={22} delay={0.12} />
-      <PngSticker src="/stickers/mora.png" className="right-0 bottom-6 w-24 md:right-3 md:bottom-10 md:w-36" rotate={-12} delay={0.16} />
-      <div className="relative z-[3] mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 md:grid-cols-[0.86fr_1.14fr] md:gap-14 md:px-8 md:py-28">
-        <Reveal>
-          <p className="font-display text-3xl text-[#0d3333] italic">promesa</p>
-          <div className="mt-4 flex flex-col items-start gap-1.5">
-            {barras.map((line) => (
-              <span
-                key={line}
-                className="bg-[#e7ef9a] px-3 py-1.5 font-display text-[2rem] leading-none text-[#0d3333] uppercase md:text-5xl"
-              >
-                {line}
-              </span>
-            ))}
-          </div>
-          <p className="mt-5 max-w-sm font-display text-2xl leading-[1.05] text-[#0d3333] md:text-3xl">
-            — en cómo digieres, en tu energía, en tu ciclo.
-          </p>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <div className="h-px w-full bg-[#0d3333]/20" />
-          <p className="mt-6 font-display text-[1.7rem] leading-[1.12] text-[#0d3333] md:text-4xl">
-            Aquí vas a aprender a escucharlo, en lugar de pelear contra él con{" "}
-            <span className="box-decoration-clone bg-[linear-gradient(transparent_64%,#e7ef9a_64%)]">otra dieta restrictiva.</span>
-          </p>
-          <div className="mt-6 space-y-4 text-lg leading-snug font-semibold text-ink/85 md:text-xl">
-            <p>
-              Quizás ya hiciste exámenes que salieron “normales” sin que eso te diera respuestas. Quizás te hinchas, te cansas, o sientes que tu cuerpo no responde como debería — y empiezas a preguntarte si algo está mal contigo. No es eso. Es que nadie te ha explicado que tu digestión, tu microbiota y tus hormonas son un mismo sistema, hablando un idioma que nunca te enseñaron a leer.
-            </p>
-            <p>
-              Trabajamos ese sistema completo, desde los hábitos reales que puedes sostener en el tiempo — no desde un plan que se rompe la primera semana. Si algo necesita ajustarse, se ajusta a{" "}
-              <span className="box-decoration-clone bg-[linear-gradient(transparent_64%,#e7ef9a_64%)]">tu caso real</span>
-              {" "}— no por una lista genérica de prohibidos, sino con un acompañamiento que mira más allá de lo que tienes en el plato, para que vuelvas a confiar en tu cuerpo en lugar de desconfiar de él.
-            </p>
-          </div>
-          <div className="mt-6 h-px w-full bg-[#0d3333]/20" />
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 function Enfoque() {
   return (
     <section id="enfoque" className="relative scroll-mt-24 overflow-hidden bg-[#0d3333] text-[#f7f4ec]">
-      <PngSticker src="/stickers/hoja-salvia.png" className="-top-16 -left-24 hidden w-64 md:-top-10 md:-left-16 md:block md:w-80" rotate={-18} />
-      <PngSticker src="/stickers/hoja-roble.png" className="-right-20 -bottom-16 hidden w-64 md:-right-10 md:-bottom-8 md:block md:w-[22rem]" rotate={14} delay={0.08} />
-      <div className="relative z-[3] mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
-        <Reveal className="max-w-3xl">
-          <p className="font-display text-2xl text-[#cde1aa] italic">mi enfoque</p>
-          <h2 className="mt-3 font-display text-4xl leading-[1.05] md:text-6xl">
-            Nutrición funcional y digestiva,{" "}
-            <span className="text-[#e7ef9a]">con mirada integral</span>
-          </h2>
-          <p className="mt-6 text-base leading-relaxed text-cream/80 md:text-lg">
-            Soy nutricionista dietista de la Pontificia Universidad Javeriana, con mirada funcional y digestiva. No me quedo en “qué comes”: miro tu cuerpo como un sistema completo, donde tu digestión, tu microbiota y tus hormonas están conectadas, y trabajo contigo desde tus hábitos reales.
-          </p>
-          <p className="mt-4 text-base leading-relaxed text-cream/80 md:text-lg">
-            En la consulta no nos centramos en el peso. Tu salud es el eje. Olvídate de contar calorías y de restringirte.
-          </p>
-          <p className="mt-4 font-display text-2xl text-[#f8bad1] italic">
-            ¿Qué significa esto en la práctica cuando trabajamos juntas?
-          </p>
-        </Reveal>
-        <ul className="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {ENFOQUE.map((item, i) => (
-            <Fila key={item} n={String(i + 1).padStart(2, "0")} text={item} delay={(i % 3) * 0.08} />
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
-
-const PROGRAMAS = [
-  {
-    kicker: "Programa digital · 4 semanas",
-    title: "Hazte amiga de tus hormonas",
-    text: "Acné que no se va, cabello que cae, un ciclo que hace lo que quiere — y la sensación de que “algo está mal contigo”. No lo está. Aprende a leer lo que tu cuerpo te dice sobre tu SOMP y tu resistencia a la insulina.",
-    price: `Desde ${PRECIOS.hormonasBasico.usd} USD`,
-    eur: PRECIOS.hormonasBasico.eur,
-    href: ROUTES.hormonas,
-    cta: "Quiero mi lugar",
-    className: "bg-[#e2d5e8]",
-    dark: false,
-  },
-  {
-    kicker: "Mini-reto · 5 días · noviembre",
-    title: "Vacaciones sin restricción",
-    text: "Diciembre no tiene que ser el mes en que “todo se arruina” y enero el mes en que “empiezas de nuevo”. Desinflámate, disfruta tus vacaciones y llega a enero sin culpa ni castigo.",
-    price: `Desde ${PRECIOS.vacacionesBasico.cop} COP`,
-    eur: PRECIOS.vacacionesBasico.eur,
-    href: ROUTES.vacaciones,
-    cta: "Quiero mi plan",
-    className: "bg-[#0d3333] text-[#f7f4ec]",
-    dark: true,
-  },
-  {
-    kicker: "Acompañamiento personalizado",
-    title: "Consulta 1:1",
-    text: "Ya intentaste dietas que no se sostienen. Aquí construimos un plan desde tus hábitos reales, con acompañamiento que mira tu digestión, tu microbiota y tus hormonas como el sistema conectado que son.",
-    price: `Desde ${PRECIOS.consultaInicio.cop} COP`,
-    eur: PRECIOS.consultaInicio.eur,
-    href: "#planes",
-    cta: "Quiero mi consulta",
-    className: "border-2 border-[#0d3333]/35 bg-[#fffdf8]",
-    dark: false,
-  },
-];
-
-function Catalogo() {
-  return (
-    <section id="programas" className="relative scroll-mt-24 overflow-hidden bg-[#eeedeb] px-5 py-20 md:px-8 md:py-28">
-      <PngSticker
-        src="/stickers/palta.png"
-        className="-right-8 bottom-4 hidden w-36 md:-right-2 md:block md:w-52"
-        rotate={12}
-      />
-      <div className="relative z-[3] mx-auto max-w-6xl">
+      <PngSticker src="/stickers/fresa.png" className="top-2 right-2 w-28 md:top-4 md:right-10 md:w-44" rotate={-12} />
+      <PngSticker src="/stickers/hoja.png" className="top-[30%] -left-16 w-28 md:top-[24%] md:-left-4 md:w-44" rotate={8} delay={0.06} />
+      <PngSticker src="/stickers/hoja-higuera.png" className="top-[50%] -right-28 w-36 md:top-[42%] md:-right-14 md:w-52" rotate={-6} delay={0.1} />
+      <PngSticker src="/stickers/hoja-salvia.png" className="top-[72%] -left-16 w-24 md:top-[64%] md:-left-2 md:w-40" rotate={20} delay={0.14} />
+      <PngSticker src="/stickers/hoja-roble.png" className="-bottom-4 -left-14 w-36 md:bottom-4 md:left-2 md:w-56" rotate={12} delay={0.08} />
+      <PngSticker src="/stickers/hoja.png" className="-right-16 bottom-4 w-28 md:-right-4 md:bottom-8 md:w-44" rotate={-20} delay={0.18} />
+      <div className="relative z-[3] mx-auto max-w-6xl px-5 pt-10 pb-16 md:px-8 md:py-20">
         <Reveal>
-          <p className="font-display text-2xl text-[#7d648c] italic">catálogo</p>
-          <h2 className="mt-3 max-w-xl font-display text-4xl leading-[0.95] text-[#0d3333] md:text-6xl">
-            Elige tu punto de partida
+          <h2 className="max-w-[15.5rem] font-display text-[2.15rem] leading-[0.95] md:max-w-2xl md:text-6xl">
+            ¿Por qué iniciar un proceso conmigo?
           </h2>
         </Reveal>
-        <div className="mt-10 grid gap-5 lg:grid-cols-3">
-          {PROGRAMAS.map((item, i) => (
-            <Reveal key={item.title} delay={i * 0.06}>
-              <a
-                href={item.href}
-                className={`group flex h-full flex-col rounded-[1.8rem] p-6 transition-transform duration-300 hover:-translate-y-1.5 hover:rotate-[-0.4deg] md:p-7 ${item.className}`}
-              >
-                <p className={`font-display text-2xl italic ${item.dark ? "text-[#cde1aa]" : "text-[#7d648c]"}`}>{item.kicker}</p>
-                <h3 className={`mt-3 font-display text-3xl leading-[1.05] ${item.dark ? "text-[#f7f4ec]" : "text-[#0d3333]"}`}>{item.title}</h3>
-                <p className={`mt-4 flex-1 text-sm leading-relaxed ${item.dark ? "text-[#f7f4ec]/85" : "text-[#3d2916]/85"}`}>{item.text}</p>
-                <p className={`mt-6 font-display text-2xl ${item.dark ? "text-[#f7f4ec]" : "text-[#0d3333]"}`}>{item.price}</p>
-                <p className={`text-sm ${item.dark ? "text-[#f7f4ec]/70" : "text-[#3d2916]/70"}`}>{item.eur}</p>
-                <span className="mt-6 inline-flex w-full items-center justify-center rounded-full bg-[#e7ef9a] px-6 py-3 text-center font-display text-base text-[#0d3333] italic">
-                  {item.cta}
-                </span>
-              </a>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Historia() {
-  return (
-    <section id="historia" className="relative scroll-mt-24 overflow-hidden bg-[#e2d5e8]">
-      <PngSticker src="/stickers/peonia.png" className="-top-10 -right-8 w-36 md:-right-2 md:w-48" rotate={14} />
-      <div className="relative z-[3] mx-auto grid max-w-6xl items-center gap-10 px-5 py-20 md:grid-cols-[minmax(16rem,0.82fr)_1.18fr] md:gap-14 md:px-8 md:py-28">
-        <figure className="mx-auto w-full max-w-md md:max-w-none">
-          <div className="rounded-[1.6rem] bg-[#fffdf8] p-3 shadow-[0_18px_40px_rgba(13,51,51,0.16)] md:-rotate-1 md:p-4">
-            <img
-              src="/media/home/historia-mafe.png"
-              alt="Mafe Cerquera"
-              width={510}
-              height={768}
-              className="aspect-[2/3] w-full rounded-[1.15rem] object-cover"
-            />
-          </div>
-        </figure>
-        <Reveal>
-          <p className="font-display text-2xl text-[#7d648c] italic">mi historia</p>
-          <h2 className="mt-3 font-display text-4xl text-[#0d3333] md:text-5xl">
-            ¡Bienvenida a mi mundo!
-          </h2>
-          <div className="mt-8 space-y-5 text-base leading-relaxed text-ink/85 md:text-lg">
-            <p>
-              Lo que acabas de leer no es solo una promesa de marketing. Es lo que yo misma tuve que aprender en carne propia.
-            </p>
-            <p>
-              Mi pasión por la nutrición nació a través de mi experiencia y de un giro de 180 grados en el que logré una mejor versión de mí misma, cambiando hábitos e implementando estilos de vida saludables sin restricciones.
-            </p>
-            <p>
-              Por esta razón quiero compartir todo este conocimiento contigo, apoyarte y acompañarte a lograr tu mejor versión.
-            </p>
-            <p>
-              Sé que empezar un proceso puede dar miedo, especialmente cuando lo has intentado tantas veces antes. Por eso quiero que aquí te sientas escuchada, acompañada y entendida. Mi objetivo no es solo ayudarte a cambiar físicamente, sino enseñarte a construir hábitos y una relación con la comida que realmente puedas disfrutar y mantener en el tiempo.
-            </p>
-          </div>
-          <p className="mt-8 font-display text-2xl text-[#0d3333] italic">— Mafe Cerquera</p>
-          <p className="mt-2 text-sm text-[#0d3333]/70">
-            María Fernanda Cerquera · fundadora de Lady Boss Club Colombia
-          </p>
-        </Reveal>
+        <CarruselEnfoque />
       </div>
     </section>
   );
@@ -578,74 +638,56 @@ function Credenciales() {
           ))}
         </div>
       </div>
-      <div className="relative z-[3] mx-auto grid max-w-6xl items-center gap-8 px-5 py-16 md:grid-cols-[0.86fr_1.14fr] md:gap-12 md:px-8 md:py-24">
-        <figure className="mx-auto w-full max-w-sm md:max-w-none">
-          <div className="rounded-[1.6rem] bg-[#fffdf8] p-3 shadow-[0_18px_40px_rgba(13,51,51,0.16)] md:p-4">
-            <img
-              src="/media/home/mafe-cocina.png"
-              alt="Mafe Cerquera"
-              width={524}
-              height={800}
-              className="aspect-[2/3] w-full rounded-[1.15rem] object-cover object-[center_18%]"
-            />
+      <div className="relative z-[3] mx-auto w-full max-w-md px-5 py-16 md:max-w-5xl md:px-8 md:py-24">
+        <div className="flex flex-col rounded-[1.8rem] bg-[#fffdf8] p-3 shadow-[0_18px_40px_rgba(13,51,51,0.16)] md:flex-row md:items-center md:gap-8 md:p-6">
+          <img
+            src="/media/home/mafe-cocina.png"
+            alt="Mafe Cerquera"
+            width={524}
+            height={800}
+            className="aspect-[2/3] w-full rounded-[1.2rem] object-cover object-[center_18%] md:aspect-[4/5] md:w-[46%] md:shrink-0"
+          />
+          <div className="min-w-0 flex-1 px-3 pt-6 pb-4 md:px-2 md:py-4">
+            <p className="text-xs font-semibold tracking-[0.18em] text-[#7d648c] uppercase">Hola, soy Mafe</p>
+            <h2 className="mt-4 font-display text-[2.15rem] leading-[1.02] text-[#0d3333] md:text-5xl">
+              Quiero que aprendas a cuidarte sin dejar de disfrutar.
+            </h2>
+            <p className="mt-6 text-base leading-relaxed text-[#0d3333]/85 md:text-lg">
+              Soy nutricionista funcional y digestiva. Mi enfoque busca ayudarte a comprender tu alimentación y construir hábitos que funcionen para tu vida.
+            </p>
           </div>
-        </figure>
-        <div className="rounded-[1.8rem] bg-[#fffdf8] px-6 py-8 shadow-[0_18px_40px_rgba(13,51,51,0.12)] md:px-10 md:py-12">
-          <h2 className="font-display text-4xl leading-[0.92] text-[#0d3333] uppercase md:text-6xl">
-            Educación & credenciales
-          </h2>
-          <ul className="mt-8 space-y-4 text-base leading-relaxed text-[#0d3333] md:text-lg">
-            {CREDENCIALES.map((item) => (
-              <li key={item} className="flex items-start gap-3">
-                <span aria-hidden className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#7d648c]" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
         </div>
       </div>
     </section>
   );
 }
 
-function Planes() {
+function CierreComunidad() {
   return (
-    <section id="planes" className="scroll-mt-24 bg-[#eeedeb] px-5 py-16 text-[#3d2916] md:px-8 md:py-24">
-      <div className="mx-auto max-w-6xl">
-        <Reveal className="text-center">
-          <p className="font-display text-2xl text-[#0d3333] italic">consulta 1:1</p>
-          <h2 className="mt-2 font-display text-4xl leading-[0.92] text-[#0d3333] md:text-6xl">Iniciemos juntos</h2>
-        </Reveal>
-        <div className="mt-10 grid items-stretch gap-5 lg:grid-cols-3">
-          {PLANES.map((plan) => (
-            <article
-              key={plan.name}
-              className="flex h-full flex-col rounded-[1.75rem] border-2 border-[#0d3333]/35 bg-[#fffdf8] px-7 py-9 text-center"
-            >
-              <h3 className="flex min-h-[4.8rem] items-center justify-center font-display text-3xl leading-none tracking-wide text-[#0d3333] uppercase">
-                {plan.name}
-              </h3>
-              <p className="mt-6 font-display text-5xl leading-none text-[#0d3333]">{plan.price}</p>
-              <p className="mt-2 text-sm text-[#3d2916]/70">{plan.extra}</p>
-              <ul className="mx-auto mt-6 w-full max-w-xs flex-1 space-y-2 text-left text-sm leading-relaxed">
-                {plan.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2">
-                    <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#0d3333]" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-auto pt-8">
-                <Pill
-                  href={`${WHATSAPP}?text=${encodeURIComponent(`Hola Mafe, quiero información del plan ${plan.name}.`)}`}
-                  tone="cream"
-                  className="w-full !bg-[#e7ef9a] !text-[#0d3333] hover:!bg-[#d7e388]"
-                >
-                  quiero este plan
-                </Pill>
-              </div>
-            </article>
-          ))}
+    <section className="relative overflow-hidden">
+      <img
+        src="/media/home/separador.jpg"
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover object-[center_45%]"
+      />
+      <div className="relative flex min-h-[28rem] items-center px-5 py-14 md:min-h-[32rem] md:px-8 md:py-20">
+        <div className="mx-auto w-full max-w-3xl rounded-[1.6rem] bg-[#e7eee4] px-6 py-7 text-[#0d3333] shadow-[0_18px_40px_rgba(13,51,51,0.18)] md:px-10 md:py-9">
+          <p className="text-xs font-semibold tracking-[0.16em] uppercase">Bien desde adentro</p>
+          <h2 className="mt-3 max-w-2xl font-display text-[1.85rem] leading-[1.05] md:text-[2.4rem]">
+            Tu camino hacia una mejor relación con tu cuerpo empieza aquí.
+          </h2>
+          <p className="mt-3 max-w-2xl text-base leading-relaxed md:text-lg">
+            Únete a un espacio donde hablamos de alimentación, hábitos y bienestar de forma práctica y sin restricciones extremas.
+          </p>
+          <a
+            href={LADY_BOSS}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-black px-6 py-3.5 text-sm font-semibold tracking-[0.08em] text-white uppercase"
+          >
+            Unirme a la comunidad
+            <span aria-hidden>→</span>
+          </a>
         </div>
       </div>
     </section>
@@ -672,16 +714,64 @@ const HISTORIAS_RIEL = [
   { type: "image" as const, src: "/media/home/historias/historia-10.png", alt: "Desayuno con huevos, champiñones y tomate", tall: true },
 ];
 
-const MENSAJES = [
-  "Quería un cambio en mi vida respecto a la alimentación que es parte fundamental para la buena salud física y mental y de pronto vi el trabajo que hacías como nutricionista para que logremos una relación magnífica con la comida, sin restricciones pero consciente. Desde que comencé mi proceso he sentido ese cambio grande que quería, he mejorado mi tránsito intestinal, mi estado de ánimo, cambios físicos y además con los suplementos que me has recomendado siento como me ayudan y complementan a los cambios que quiero seguir logrando. Graciasssss!! Sin duda la mejor y la mejor nutricionista que pude encontrar para mi salud y mi cuerpo!!",
-  "Mafee mil gracias por tu acompañamiento en todo este proceso! Hoy me siento más segura de que puedo lograr lo que me propongo y muy feliz de poder haber cambiado mi estilo de vida a uno más saludable! Toodoo gracias a tiiii eres la mejor. La mejor decisión poder acceder a tu programa",
-  "Holaaa Maf. Bueno te quiero agradecer un montón, no solo ayudaste a tener una relación sana con la comida sino que también me ayudaste a crear un hábito único. Me ayudaste a entender el proceso y lo saludable que es comer bien. Pues con este hábito empezaron a llegar hábitos nuevos como el cuidarme física, mental y emocionalmente y el más importante el buen descanso. Con esto a llegado cosas grandiosas como que mi piel está más hermosa sin tantos granos en la cara, mi cuerpo se siente más liviano, mi cabello está más brillante. También te agradezco porque no solo me ayudaste a mí si no también a mi familia al ellos adaptarse a lo que yo como ellos empezaron a ver también cambios",
-  "Mi salud intestinal ha mejorado, me entusiasma mucho hacer desayuno, complementar mis almuerzos y hacer mis cenas.",
+const TESTIMONIOS = [
+  "/media/home/testimonios/testimonio-01.png",
+  "/media/home/testimonios/testimonio-02.png",
+  "/media/home/testimonios/testimonio-03.png",
+  "/media/home/testimonios/testimonio-04.png",
+  "/media/home/testimonios/testimonio-05.png",
+  "/media/home/testimonios/testimonio-06.png",
+  "/media/home/testimonios/testimonio-07.png",
 ];
+
+const MARQUEE_SPEED = 36;
+
+function useMarqueeSpeed(trackRef: { current: HTMLDivElement | null }, reduce: boolean) {
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || reduce) return;
+    const apply = () => {
+      const half = track.scrollWidth / 2;
+      if (half > 0) track.style.animationDuration = `${half / MARQUEE_SPEED}s`;
+    };
+    apply();
+    const observer = new ResizeObserver(apply);
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, [reduce, trackRef]);
+}
+
+function RielTestimonios() {
+  const reduce = useReducedMotion();
+  const trackRef = useRef<HTMLDivElement>(null);
+  useMarqueeSpeed(trackRef, reduce);
+  const loop = [...TESTIMONIOS, ...TESTIMONIOS];
+
+  return (
+    <div className="marquee-rail relative z-[3] -mx-5 mt-4 overflow-hidden md:-mx-8" role="region" aria-label="Testimonios">
+      <div ref={trackRef} className="animate-marquee-stories is-reverse flex w-max items-end gap-4">
+        {loop.map((src, i) => {
+          const copy = i >= TESTIMONIOS.length;
+          return (
+            <img
+              key={`${src}-${i}`}
+              src={src}
+              alt={copy ? "" : `Testimonio de una paciente, ${i + 1}`}
+              aria-hidden={copy || undefined}
+              className="w-80 shrink-0 rounded-[1.4rem] shadow-[0_16px_34px_rgba(13,51,51,0.14)] md:w-96"
+            />
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 function RielHistorias() {
   const reduce = useReducedMotion();
   const railRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  useMarqueeSpeed(trackRef, reduce);
 
   useEffect(() => {
     const videos = railRef.current?.querySelectorAll("video") ?? [];
@@ -700,11 +790,11 @@ function RielHistorias() {
   return (
     <div
       ref={railRef}
-      className="stories-rail relative z-[3] -mx-5 mt-14 overflow-hidden md:-mx-8"
+      className="marquee-rail relative z-[3] -mx-5 mt-10 overflow-hidden md:-mx-8"
       role="region"
       aria-label="Historias"
     >
-      <div className="animate-marquee-stories flex w-max items-center gap-4">
+      <div ref={trackRef} className="animate-marquee-stories flex w-max items-center gap-4">
         {loop.map((item, i) => {
           const copy = i >= HISTORIAS_RIEL.length;
           const frame = item.tall ? "aspect-[9/16]" : "aspect-[3/4]";
@@ -712,7 +802,7 @@ function RielHistorias() {
             <article
               key={`${item.src}-${i}`}
               aria-hidden={copy || undefined}
-              className="w-40 shrink-0 overflow-hidden rounded-[1.3rem] border-2 border-[#0d3333] bg-black md:w-52"
+              className="w-72 shrink-0 overflow-hidden rounded-[1.3rem] border-2 border-[#0d3333] bg-black md:w-80"
             >
               {item.type === "video" ? (
                 <video muted loop playsInline preload="auto" aria-label={copy ? undefined : item.alt} className={`${frame} w-full object-cover`}>
@@ -730,147 +820,23 @@ function RielHistorias() {
 }
 
 function Historias() {
-  const reduce = useReducedMotion();
-  const dir = useRef(1);
-  const [index, setIndex] = useState(0);
-  const [per, setPer] = useState(1);
-  const total = MENSAJES.length;
-  const pages = Math.ceil(total / per);
-  const page = ((index % pages) + pages) % pages;
-  const visible = MENSAJES.slice(page * per, page * per + per);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const apply = () => {
-      setPer(mq.matches ? 2 : 1);
-      setIndex(0);
-    };
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
-
-  const go = (next: number) => {
-    dir.current = next > index ? 1 : -1;
-    setIndex(next);
-  };
-
   return (
-    <section id="voces" className="relative scroll-mt-24 overflow-hidden bg-[#e2d5e8] px-5 py-20 md:px-8 md:py-28">
-      <PngSticker src="/stickers/flor.png" className="top-4 -right-16 hidden w-36 md:top-8 md:-right-2 md:block md:w-52" rotate={12} />
-      <div className="relative z-[3] mx-auto max-w-6xl">
+    <section id="voces" className="relative scroll-mt-24 overflow-hidden bg-[#e2d5e8] px-5 pt-6 pb-12 md:px-8 md:pt-10 md:pb-16">
+      <div className="relative z-[3] mx-auto flex max-w-6xl items-center justify-between gap-3">
         <Reveal>
           <h2 className="font-display text-4xl leading-[0.95] text-[#0d3333] md:text-6xl">
             Historias que inspiran
           </h2>
         </Reveal>
-        <div className="relative mt-10" role="region" aria-roledescription="carrusel" aria-label="Testimonios">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={`${per}-${page}`}
-              aria-roledescription="diapositiva"
-              aria-label={`Página ${page + 1} de ${pages}`}
-              initial={reduce ? false : { opacity: 0, x: dir.current * 56 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={reduce ? undefined : { opacity: 0, x: dir.current * -56 }}
-              transition={{ duration: 0.4, ease: slideEase }}
-              className="grid items-stretch gap-6 md:grid-cols-2 md:gap-8"
-            >
-              {visible.map((mensaje, offset) => (
-                <article
-                  key={mensaje.slice(0, 24)}
-                  className={`relative h-full min-h-[18rem] overflow-hidden bg-[#fffdf6] px-5 py-6 shadow-[0_16px_34px_rgba(13,51,51,0.14)] md:px-7 ${offset % 2 === 0 ? "md:-rotate-1" : "md:rotate-1"}`}
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(to right, transparent 2.35rem, rgba(196, 92, 106, 0.7) 2.35rem, rgba(196, 92, 106, 0.7) calc(2.35rem + 2px), transparent calc(2.35rem + 2px)), repeating-linear-gradient(to bottom, transparent 0, transparent 2.05rem, rgba(13, 51, 51, 0.14) 2.05rem, rgba(13, 51, 51, 0.14) calc(2.05rem + 1px))",
-                    backgroundPosition: "0 1.35rem, 0 1.15rem",
-                  }}
-                >
-                  <span aria-hidden className="absolute top-8 left-3 h-3.5 w-3.5 rounded-full bg-[#e2d5e8] ring-1 ring-[#0d3333]/15" />
-                  <span aria-hidden className="absolute bottom-8 left-3 h-3.5 w-3.5 rounded-full bg-[#e2d5e8] ring-1 ring-[#0d3333]/15" />
-                  <p className="pl-8 font-[family-name:var(--font-caveat)] text-[1.65rem] leading-[2.06rem] text-[#16343a] md:text-[1.7rem]">
-                    {mensaje}
-                  </p>
-                </article>
-              ))}
-            </motion.div>
-          </AnimatePresence>
-          <div className="mt-6 flex items-center justify-center gap-4">
-            <button
-              type="button"
-              aria-label="Testimonios anteriores"
-              onClick={() => go(index - 1)}
-              className="grid h-11 w-11 place-items-center rounded-full border-2 border-[#0d3333] text-[#0d3333] transition hover:bg-[#0d3333] hover:text-[#fffdf8]"
-            >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                <path d="M15 5 8 12l7 7" />
-              </svg>
-            </button>
-            <div className="flex items-center gap-2">
-              {Array.from({ length: pages }, (_, dot) => (
-                <button
-                  key={dot}
-                  type="button"
-                  aria-label={`Página ${dot + 1}`}
-                  aria-current={dot === page ? "true" : undefined}
-                  onClick={() => go(dot)}
-                  className={`h-2.5 rounded-full bg-[#0d3333] transition-all ${dot === page ? "w-8" : "w-2.5 opacity-30"}`}
-                />
-              ))}
-            </div>
-            <button
-              type="button"
-              aria-label="Testimonios siguientes"
-              onClick={() => go(index + 1)}
-              className="grid h-11 w-11 place-items-center rounded-full border-2 border-[#0d3333] text-[#0d3333] transition hover:bg-[#0d3333] hover:text-[#fffdf8]"
-            >
-              <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                <path d="m9 5 7 7-7 7" />
-              </svg>
-            </button>
-          </div>
-        </div>
+        <img src="/stickers/flor.png" alt="" className="h-[4.75rem] w-[4.75rem] shrink-0 -rotate-12 object-contain md:h-28 md:w-28" />
       </div>
+      <RielTestimonios />
       <RielHistorias />
     </section>
   );
 }
 
-function Cierre() {
-  return (
-    <section className="relative overflow-hidden bg-[#eeedeb] px-5 py-20 md:px-8 md:py-28">
-      <PngSticker src="/stickers/hoja.png" className="-top-8 right-4 hidden w-32 md:block md:w-44" rotate={-20} />
-      <div className="relative z-[3] mx-auto max-w-3xl">
-        <Reveal>
-          <h2 className="font-display text-4xl leading-[1.05] text-forest md:text-6xl">
-            Iniciemos este camino juntas
-          </h2>
-          <div className="mt-6 space-y-4 text-base leading-relaxed text-ink/85 md:text-lg">
-            <p>
-              Recuerda que solo tú puedes iniciar este cambio y que no se trata de llenarte de restricciones o dejar de comer, sino de encontrar alternativas saludables y que aprendas a conectar con tu cuerpo, alma y mente.
-            </p>
-            <p>Es tu turno de iniciar este cambio, nadie lo hará por ti.</p>
-            <p className="font-display text-2xl text-forest italic">
-              Aquí te espero para que iniciemos este cambio junto(a)s.
-            </p>
-          </div>
-          <div className="mt-8">
-            <Pill href="#programas">Quiero empezar</Pill>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 function Pie() {
-  const paginas = [
-    { href: ROUTES.home, label: "Inicio" },
-    { href: ROUTES.vacaciones, label: "Vacaciones sin restricción" },
-    { href: ROUTES.hormonas, label: "Hazte amiga de tus hormonas" },
-    { href: ROUTES.acompanamiento, label: "Consulta 1:1" },
-    { href: LADY_BOSS, label: "Lady Boss Club" },
-  ];
   const redes = [
     { href: INSTAGRAM, label: "Instagram", icon: "instagram" },
     { href: TIKTOK, label: "TikTok", icon: "tiktok" },
@@ -879,19 +845,7 @@ function Pie() {
 
   return (
     <footer className="gals-type bg-[#0d3333] pb-[env(safe-area-inset-bottom)] text-[#d7ebc8]">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-7 px-5 py-10 md:px-8">
-        <nav aria-label="Páginas" className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3 text-sm">
-          {paginas.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              {...(item.href.startsWith("http") ? { target: "_blank", rel: "noreferrer" } : {})}
-              className="transition hover:text-[#f7f4ec]"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-5 px-5 py-10 md:px-8">
         <div className="flex items-center gap-3">
           {redes.map((item) => (
             <a

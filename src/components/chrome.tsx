@@ -58,8 +58,7 @@ export function Eyebrow({
 const HOME_LINKS = [
   { href: "/#programas", label: "Programas" },
   { href: "/#enfoque", label: "Enfoque" },
-  { href: "/#planes", label: "Planes" },
-  { href: "/#historia", label: "Historia" },
+  { href: "/#voces", label: "Voces" },
 ];
 
 export function Header({
@@ -135,7 +134,7 @@ export function Header({
 
         <div className="hidden md:block">
           {overlay ? (
-            <a href={cta.href} className={`inline-flex items-center rounded-full px-5 py-2.5 text-sm leading-none ${heavy} ${tones[cta.tone ?? "forest"]} ${overlay ? "!text-[#0d3333]" : ""}`}>
+            <a href={cta.href} className={`inline-flex items-center rounded-full bg-black px-5 py-2.5 text-sm leading-none text-white ${heavy}`}>
               {cta.label}
             </a>
           ) : (
@@ -146,7 +145,7 @@ export function Header({
         <div className="flex items-center gap-2 md:hidden">
           <a
             href={cta.href}
-            className={`inline-flex items-center rounded-full px-3 py-2 text-sm leading-none ${overlay ? heavy : "font-display italic"} ${tones[cta.tone ?? "forest"]} ${overlay ? "!text-[#0d3333]" : ""}`}
+            className={`inline-flex items-center rounded-full px-3 py-2 text-sm leading-none ${overlay ? `bg-black text-white ${heavy}` : `font-display italic ${tones[cta.tone ?? "forest"]}`}`}
           >
             {cta.label}
           </a>

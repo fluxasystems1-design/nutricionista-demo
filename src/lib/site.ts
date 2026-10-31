@@ -48,12 +48,12 @@ export const CREDENCIALES = [
 
 export const ENFOQUE = [
   "Aprenderás a escuchar y a conectar con tu cuerpo.",
-  "Identificamos tus señales de hambre, tipos de hambre y señales de saciedad.",
-  "Regulamos tu microbiota intestinal — es tu segundo cerebro, y regula tu parte intestinal, emocional, metabólica y hormonal.",
-  "Miramos la nutrición con un enfoque integral y funcional: analizamos muchos factores más allá de lo que comes.",
-  "Revisamos tus exámenes de laboratorio, para confirmar que no haya alteraciones o deficiencias de fondo.",
-  "Diseño tu plan ajustado a tu caso real, construyendo hábitos sostenibles en lugar de prohibiciones genéricas.",
-  "Evaluamos porciones y cantidades de forma continua y personalizada.",
-  "Suplementación adecuada, después de evaluar tu caso a profundidad.",
-  "Controles continuos para asegurarnos de que los resultados se sostengan.",
+  "Trabajaremos en identificar tus señales de hambre, tipos de hambre y señales de saciedad.",
+  "Regularemos tu microbiota intestinal, ya que es nuestro segundo cerebro y regula toda nuestra parte intestinal, emocional, metabólica y hormonal.",
+  "Miraremos la nutrición mediante un enfoque integral y funcional, donde analizaremos muchos factores diferentes a solo lo que comes.",
+  "Revisaremos tus exámenes de laboratorio, para cerciorarnos de que no tengas alteraciones o deficiencias. De no tenerlos, yo te los envío según tu caso.",
+  "Te enviaré un plan nutricional enfocado en tus necesidades, sin restricciones y sin eliminar grupos de alimentos.",
+  "Evaluaremos porciones y cantidades de forma continua y personalizada.",
+  "Realizaremos una suplementación adecuada después de evaluar y profundizar en tu caso.",
+  "Haremos controles continuos con el fin de que estemos logrando los objetivos.",
 ] as const;

@@ -79,10 +79,14 @@ button:focus-visible {
 }
 
 .animate-marquee-stories {
-  animation: marquee 90s linear infinite;
+  animation: marquee 140s linear infinite;
 }
 
-.stories-rail:hover .animate-marquee-stories {
+.animate-marquee-stories.is-reverse {
+  animation-direction: reverse;
+}
+
+.marquee-rail:hover .animate-marquee-stories {
   animation-play-state: paused;
 }
 
@@ -205,7 +209,7 @@ button:focus-visible {
     animation: none;
   }
 
-  .stories-rail {
+  .marquee-rail {
     overflow-x: auto;
   }
 }
