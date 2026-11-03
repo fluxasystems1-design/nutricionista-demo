@@ -336,7 +336,7 @@ function Hero() {
         <Reveal className="w-full min-w-0 max-w-full text-center text-forest">
           <div className="hidden md:block">
             <div className="hero-lockup">
-              <Eyebrow>Mafer Cerquera × Natalia Galvis · Inicio 23 de noviembre</Eyebrow>
+              <Eyebrow>Mafe Cerquera × Natalia Galvis · Inicio 23 de noviembre</Eyebrow>
               <h1 className="mt-4">
                 <img
                   src="/media/vacaciones-sin-restriccion/imagenes/titulo-hero.png"

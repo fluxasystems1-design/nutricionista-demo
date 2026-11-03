@@ -36,12 +36,12 @@ const ETAPAS = [
   {
     n: "01",
     title: "Primero, vamos a conocerte.",
-    text: "Revisamos tus hábitos, objetivos, antecedentes y necesidades. A partir de esa evaluación, Mafer diseña una estrategia nutricional individualizada.",
+    text: "Revisamos tus hábitos, objetivos, antecedentes y necesidades. A partir de esa evaluación, Mafe diseña una estrategia nutricional individualizada.",
   },
   {
     n: "02",
     title: "Después, lo llevamos a tu vida real.",
-    text: "Aprendes a organizar tus comidas, adaptar tus decisiones y utilizar herramientas prácticas. Mafer revisa contigo las dificultades y realiza ajustes cuando sea necesario.",
+    text: "Aprendes a organizar tus comidas, adaptar tus decisiones y utilizar herramientas prácticas. Mafe revisa contigo las dificultades y realiza ajustes cuando sea necesario.",
   },
   {
     n: "03",
@@ -339,8 +339,8 @@ function Comparacion() {
       kickerClass: "text-[#cde1aa]",
     },
     {
-      kicker: "con mafer",
-      title: "Con el acompañamiento de Mafer",
+      kicker: "con mafe",
+      title: "Con el acompañamiento de Mafe",
       items: CON_MAFER,
       from: "100%",
       delays: [0, 0.05, 0.1, 0.2],
@@ -358,8 +358,8 @@ function Comparacion() {
       </div>
       <div className="grid md:grid-cols-2">
         {columns.map((col) => (
-          <div key={col.title} className={`relative min-w-0 ${col.className} ${col.kicker === "con mafer" ? "pb-52 md:pb-64" : ""}`}>
-            {col.kicker === "con mafer" ? (
+          <div key={col.title} className={`relative min-w-0 ${col.className} ${col.kicker === "con mafe" ? "pb-52 md:pb-64" : ""}`}>
+            {col.kicker === "con mafe" ? (
               <>
                 <video
                   className="pointer-events-none absolute top-2 right-1 z-20 aspect-[4/3] w-36 rotate-[7deg] rounded-[1.15rem] object-cover shadow-[0_16px_28px_rgba(13,51,51,0.24)] md:top-6 md:right-5 md:w-56"
@@ -597,17 +597,17 @@ function PorQue() {
           <figure className="w-[min(100%,17.5rem)] -rotate-2 bg-[#f4f3f1] p-3 pb-11 shadow-[0_22px_40px_rgba(13,51,51,0.22)] md:w-[19.5rem]">
             <img
               src="/media/acompanamiento-90-dias/mafer.png"
-              alt="Mafer Cerquera"
+              alt="Mafe Cerquera"
               width={790}
               height={830}
               className="h-auto w-full"
             />
-            <figcaption className="pt-3 text-center font-display text-2xl text-[#3d2916] italic">Mafer</figcaption>
+            <figcaption className="pt-3 text-center font-display text-2xl text-[#3d2916] italic">Mafe</figcaption>
           </figure>
         </Reveal>
         <Reveal delay={0.08}>
-          <p className="font-display text-2xl text-[#0d3333] italic">por qué con mafer</p>
-          <h2 className="mt-2 font-display text-5xl leading-[0.92] text-[#3d2916] md:text-7xl">Hola, soy Mafer Cerquera.</h2>
+          <p className="font-display text-2xl text-[#0d3333] italic">por qué con mafe</p>
+          <h2 className="mt-2 font-display text-5xl leading-[0.92] text-[#3d2916] md:text-7xl">Hola, soy Mafe Cerquera.</h2>
           <p className="mt-6 text-lg leading-relaxed text-[#3d2916]/80">
             Soy nutricionista funcional y mi enfoque integra educación nutricional, bienestar digestivo y herramientas para construir una relación más consciente con la alimentación.
           </p>
@@ -629,7 +629,7 @@ function Voces() {
             Cada proceso comienza en un lugar diferente.
           </h2>
           <p className="mt-4 max-w-md text-base leading-relaxed text-[#3d2916]/80">
-            Estas experiencias pueden ayudarte a conocer cómo es trabajar con Mafer.
+            Estas experiencias pueden ayudarte a conocer cómo es trabajar con Mafe.
           </p>
         </div>
         <img src="/stickers/flor.png" alt="" className="h-20 w-20 shrink-0 -rotate-12 object-contain md:h-28 md:w-28" />
@@ -768,7 +768,7 @@ function Inscripcion({ abierta, onClose }: { abierta: boolean; onClose: () => vo
         </div>
         {sent ? (
           <p className="self-center font-display text-3xl text-[#3d2916] italic">
-            Quedó tu solicitud. Mafer confirma el cupo antes del pago.
+            Quedó tu solicitud. Mafe confirma el cupo antes del pago.
           </p>
         ) : (
           <form
