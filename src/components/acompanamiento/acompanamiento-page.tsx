@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { PngSticker } from "@/components/png-sticker";
 import { Header, Pill } from "@/components/chrome";
+import { RielHistorias, RielTestimonios } from "@/components/home/home-page";
 import { Marquee, Reveal } from "@/components/motion";
 import { INSTAGRAM, PRECIOS, ROUTES, TIKTOK, WHATSAPP } from "@/lib/site";
 
@@ -106,9 +107,30 @@ const FAQ = [
 ];
 
 export function AcompanamientoPage() {
+  const [inscripcionAbierta, setInscripcionAbierta] = useState(false);
+  const cerrarInscripcion = useCallback(() => setInscripcionAbierta(false), []);
+
+  useEffect(() => {
+    const abrir = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest?.('a[href="#inscripcion"]');
+      if (!link) return;
+      event.preventDefault();
+      setInscripcionAbierta(true);
+    };
+    document.addEventListener("click", abrir);
+    return () => document.removeEventListener("click", abrir);
+  }, []);
+
   return (
     <>
-      <Header cta={{ href: "#inscripcion", label: "Quiero comenzar" }} />
+      <Header
+        links={[
+          { href: "#proceso", label: "El proceso" },
+          { href: "#incluye", label: "Qué incluye" },
+          { href: "#preguntas", label: "Preguntas" },
+        ]}
+        cta={{ href: "#inscripcion", label: "Quiero comenzar", tone: "black" }}
+      />
       <main className="gals-type">
         <Hero />
         <Marquee
@@ -124,19 +146,30 @@ export function AcompanamientoPage() {
             "tu cuerpo, tus horarios, tu vida",
           ]}
         />
+        <Inversion />
+        <SeparadorDesayuno />
         <Promesa />
         <Comparacion />
-        <SeparadorDesayuno />
+        <Marquee
+          face="display"
+          mark="★"
+          className="bg-[#0d3333] text-[#cde1aa]"
+          items={[
+            "tu vida real",
+            "sin empezar de cero",
+            "comer bien",
+            "con acompañamiento",
+            "hábitos que puedas sostener",
+          ]}
+        />
+        <Voces />
         <ParaTi />
         <Oferta />
         <Incluye />
         <PorQue />
-        <Voces />
-        <Inversion />
         <Preguntas />
-        <Cierre />
-        <Inscripcion />
       </main>
+      <Inscripcion abierta={inscripcionAbierta} onClose={cerrarInscripcion} />
       <Pie />
     </>
   );
@@ -210,27 +243,42 @@ function RedIcon({ name }: { name: "instagram" | "tiktok" | "whatsapp" }) {
 
 function Hero() {
   return (
-    <section className="relative isolate overflow-hidden bg-[#1a100c] text-[#f7f4ec] md:min-h-[92svh]">
-      <img
-        src="/media/acompanamiento-90-dias/hero.jpg"
-        alt=""
-        width={1024}
-        height={679}
-        className="relative h-auto w-full md:absolute md:inset-0 md:h-full md:object-cover md:object-[68%_42%]"
-      />
-      <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-[#1a100c]/75 via-[#1a100c]/30 to-transparent md:block" />
-      <div className="relative z-10 mx-auto max-w-6xl px-5 pt-8 pb-10 md:flex md:min-h-[92svh] md:items-center md:px-8 md:py-20">
-        <Reveal className="max-w-xl">
-          <h1 className="font-display text-5xl leading-[0.9] md:text-7xl">
-            Comer bien no debería sentirse tan complicado.
-          </h1>
-          <p className="mt-5 max-w-md font-display text-2xl leading-snug text-[#f7f4ec] italic md:text-3xl">
+    <section className="relative overflow-hidden bg-[#f3eee6] px-4 pt-4 pb-12 text-[#3d2916] md:px-8 md:py-16">
+      <div className="relative z-[3] mx-auto grid max-w-6xl items-center gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(18rem,1fr)] lg:gap-x-10 lg:gap-y-6">
+        <h1 className="mx-auto w-full max-w-xl lg:mx-0">
+          <img
+            src="/media/acompanamiento-90-dias/imagenes/titulo-hero.png"
+            alt="Comer bien no debería sentirse tan complicado. 90 días en tu vida real."
+            width={1024}
+            height={682}
+            className="mx-auto h-auto w-full lg:mx-0"
+          />
+        </h1>
+        <figure className="relative z-10 mx-auto w-full max-w-md lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:max-w-none">
+          <div className="relative rotate-1 rounded-[1.5rem] bg-[#f7f4ec] p-2.5 shadow-[0_22px_44px_rgba(61,41,22,0.16)] md:rotate-[2deg] md:p-3">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-3 left-8 z-10 h-7 w-24 -rotate-3 bg-[repeating-linear-gradient(-18deg,#e7d7ef_0_8px,#cbb8d4_8px_9px)] shadow-[0_8px_14px_rgba(61,41,22,0.12)]"
+            />
+            <img
+              src="/media/acompanamiento-90-dias/imagenes/hero-cocina.jpg"
+              alt="Mafe Cerquera en su cocina"
+              width={819}
+              height={1024}
+              className="h-auto w-full rounded-[0.95rem]"
+            />
+          </div>
+        </figure>
+        <div className="mx-auto max-w-xl text-center lg:col-start-1 lg:mx-0 lg:text-left">
+          <p className="font-display text-2xl leading-snug text-[#3d2916] italic md:text-3xl">
             90 días para aprender a alimentarte en tu vida real.
           </p>
-          <div className="mt-8">
-            <Pill href="#inscripcion">Quiero empezar mi proceso</Pill>
+          <div className="mt-6">
+            <Pill href="#inscripcion" tone="black">
+              Quiero empezar mi proceso
+            </Pill>
           </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -239,6 +287,8 @@ function Hero() {
 function Promesa() {
   return (
     <section className="relative overflow-hidden bg-[#eeedeb] px-5 py-16 text-[#3d2916] md:px-8 md:py-24">
+      <PngSticker src="/stickers/flor.png" className="-top-6 -left-8 w-24 md:left-2 md:w-36" rotate={-14} />
+      <PngSticker src="/stickers/fresa.png" className="right-1 bottom-6 w-16 md:right-6 md:w-28" rotate={16} delay={0.08} />
       <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
         <Reveal>
           <p className="font-display text-2xl text-[#0d3333] italic">imagina</p>
@@ -308,10 +358,38 @@ function Comparacion() {
       </div>
       <div className="grid md:grid-cols-2">
         {columns.map((col) => (
-          <div key={col.title} className={col.className}>
-            <p className={`font-display text-2xl italic ${col.kickerClass}`}>{col.kicker}</p>
-            <h3 className="mt-2 font-display text-4xl leading-[0.95] italic md:text-5xl">{col.title}</h3>
-            <ul className="mt-8 space-y-3">
+          <div key={col.title} className={`relative min-w-0 ${col.className} ${col.kicker === "con mafer" ? "pb-52 md:pb-64" : ""}`}>
+            {col.kicker === "con mafer" ? (
+              <>
+                <video
+                  className="pointer-events-none absolute top-2 right-1 z-20 aspect-[4/3] w-36 rotate-[7deg] rounded-[1.15rem] object-cover shadow-[0_16px_28px_rgba(13,51,51,0.24)] md:top-6 md:right-5 md:w-56"
+                  autoPlay={!reduce}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  aria-hidden
+                >
+                  <source src="/media/acompanamiento-90-dias/testimonio-1.mp4" type="video/mp4" />
+                </video>
+                <video
+                  className="pointer-events-none absolute bottom-3 left-1 z-20 aspect-[4/3] w-44 -rotate-[7deg] rounded-[1.15rem] object-cover shadow-[0_16px_28px_rgba(13,51,51,0.24)] md:bottom-6 md:left-5 md:w-64"
+                  autoPlay={!reduce}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  aria-hidden
+                >
+                  <source src="/media/acompanamiento-90-dias/testimonio-2.mp4" type="video/mp4" />
+                </video>
+              </>
+            ) : (
+              <PngSticker src="/stickers/granada.png" className="bottom-2 -left-8 w-20 md:bottom-6 md:left-2 md:w-32" rotate={-12} />
+            )}
+            <p className={`relative z-[3] font-display text-2xl italic ${col.kickerClass}`}>{col.kicker}</p>
+            <h3 className="relative z-[3] mt-2 font-display text-4xl leading-[0.95] italic md:text-5xl">{col.title}</h3>
+            <ul className="relative z-[3] mt-8 space-y-3">
               {col.items.map((item, i) => (
                 <motion.li
                   key={item}
@@ -335,7 +413,7 @@ function Comparacion() {
 
 function SeparadorDesayuno() {
   return (
-    <div className="relative h-44 overflow-hidden md:h-64" aria-hidden>
+    <section className="relative overflow-hidden">
       <img
         src="/media/acompanamiento-90-dias/separador-desayuno.jpg"
         alt=""
@@ -343,8 +421,12 @@ function SeparadorDesayuno() {
         height={1200}
         className="absolute inset-0 h-full w-full object-cover object-[center_32%]"
       />
-      <div className="absolute inset-0 bg-white/10" />
-    </div>
+      <div className="relative flex min-h-[22rem] items-center justify-center px-5 py-14 md:min-h-[28rem] md:px-8">
+        <p className="w-full max-w-xl rounded-[1.75rem] bg-[#fffdf8]/90 px-6 py-8 text-center font-display text-[1.7rem] leading-[1.08] text-[#0d3333] shadow-[0_18px_40px_rgba(13,51,51,0.16)] md:px-10 md:py-10 md:text-[2.15rem]">
+          90 días para aprender a alimentarte en tu vida real.
+        </p>
+      </div>
+    </section>
   );
 }
 
@@ -412,7 +494,7 @@ function Oferta() {
   const tilt = ["md:-rotate-2", "md:rotate-1 md:translate-y-8", "md:rotate-2"];
 
   return (
-    <section className="relative overflow-hidden bg-[#bec1f4] text-[#3d2916]">
+    <section id="proceso" className="relative scroll-mt-24 overflow-hidden bg-[#bec1f4] text-[#3d2916]">
       <div aria-hidden className="field-lines pointer-events-none absolute inset-0" />
       <PngSticker src="/stickers/higo.png" className="-top-6 -right-4 w-32 md:-top-8 md:right-4 md:w-48" rotate={14} />
       <PngSticker src="/stickers/miel.png" className="-bottom-6 -left-10 w-28 md:bottom-2 md:left-0 md:w-40" rotate={-36} delay={0.08} />
@@ -472,8 +554,10 @@ function Incluye() {
   const reduce = useReducedMotion();
 
   return (
-    <section className="overflow-hidden bg-[#eeedeb] px-5 py-16 text-[#3d2916] md:px-8 md:py-24">
-      <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] md:gap-14">
+    <section id="incluye" className="relative scroll-mt-24 overflow-hidden bg-[#eeedeb] px-5 py-16 text-[#3d2916] md:px-8 md:py-24">
+      <PngSticker src="/stickers/peonia.png" className="-top-8 -right-8 w-28 md:right-2 md:w-40" rotate={14} />
+      <PngSticker src="/stickers/limon.png" className="bottom-2 -left-6 w-20 md:left-2 md:w-32" rotate={-10} delay={0.08} />
+      <div className="relative z-[3] mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] md:gap-14">
         <Reveal>
           <p className="font-display text-2xl text-[#0d3333] italic">te llevas</p>
           <h2 className="mt-2 font-display text-4xl leading-[0.95] text-[#3d2916] md:text-5xl">
@@ -536,68 +620,22 @@ function PorQue() {
   );
 }
 
-const TESTIMONIO_CLIPS = [
-  {
-    src: "/media/acompanamiento-90-dias/testimonio-1.mp4",
-    label: "Testimonio en videollamada, junto a la ventana",
-  },
-  {
-    src: "/media/acompanamiento-90-dias/testimonio-2.mp4",
-    label: "Testimonio en videollamada, en el sofá",
-  },
-] as const;
-
 function Voces() {
-  const reduce = useReducedMotion();
-  const first = useRef<HTMLVideoElement>(null);
-  const second = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const videos = [first.current, second.current];
-    if (reduce) {
-      videos.forEach((video) => video?.pause());
-      return;
-    }
-    videos.forEach((video) => {
-      if (!video) return;
-      void video.play().catch(() => {});
-    });
-  }, [reduce]);
-
   return (
-    <section className="relative scroll-mt-24 overflow-hidden bg-[#0d3333] px-5 py-16 text-[#cde1aa] md:px-8 md:py-24">
-      <PngSticker src="/stickers/granada.png" className="-bottom-2 -left-10 w-20 md:bottom-2 md:left-2 md:w-36" rotate={-8} />
-      <div className="relative mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-[0.78fr_1.22fr] md:gap-10">
-        <Reveal>
-          <p className="font-display text-2xl text-[#cde1aa] italic">voces</p>
-          <h2 className="mt-3 font-display text-4xl leading-[0.95] md:text-5xl">
+    <section className="relative overflow-hidden bg-[#e2d5e8] px-5 pt-14 pb-8 text-[#0d3333] md:px-8 md:pt-20">
+      <div className="relative z-[3] mx-auto flex max-w-6xl items-end justify-between gap-4">
+        <div>
+          <h2 className="max-w-xl font-display text-4xl leading-[0.95] md:text-6xl">
             Cada proceso comienza en un lugar diferente.
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-[#cde1aa]/80">
+          <p className="mt-4 max-w-md text-base leading-relaxed text-[#3d2916]/80">
             Estas experiencias pueden ayudarte a conocer cómo es trabajar con Mafer.
           </p>
-        </Reveal>
-        <div className="relative mx-auto aspect-[4/5] w-full max-w-xl md:aspect-[5/4] md:max-w-none">
-          {TESTIMONIO_CLIPS.map((clip, i) => (
-            <video
-              key={clip.src}
-              ref={i === 0 ? first : second}
-              muted
-              loop
-              playsInline
-              preload="auto"
-              aria-label={clip.label}
-              className={`absolute aspect-[4/3] w-[74%] rounded-[1.7rem] object-cover object-[62%_center] shadow-[0_22px_40px_rgba(0,0,0,0.28)] ${
-                i === 1
-                  ? "right-0 bottom-2 z-10 rotate-[5deg] md:bottom-0"
-                  : "top-2 left-0 z-0 -rotate-[7deg] md:top-0"
-              }`}
-            >
-              <source src={clip.src} type="video/mp4" />
-            </video>
-          ))}
         </div>
+        <img src="/stickers/flor.png" alt="" className="h-20 w-20 shrink-0 -rotate-12 object-contain md:h-28 md:w-28" />
       </div>
+      <RielTestimonios />
+      <RielHistorias />
     </section>
   );
 }
@@ -654,8 +692,10 @@ function Preguntas() {
   const [open, setOpen] = useState(0);
 
   return (
-    <section className="bg-[#eeedeb] px-5 py-16 text-[#3d2916] md:px-8">
-      <div className="mx-auto max-w-3xl">
+    <section id="preguntas" className="relative scroll-mt-24 overflow-hidden bg-[#eeedeb] px-5 py-16 text-[#3d2916] md:px-8">
+      <PngSticker src="/stickers/hoja-salvia.png" className="-top-8 -left-12 w-36 md:w-52" rotate={-16} />
+      <PngSticker src="/stickers/tomates.png" className="-right-6 bottom-4 w-20 md:right-2 md:w-32" rotate={12} delay={0.08} />
+      <div className="relative z-[3] mx-auto max-w-3xl">
         <p className="font-display text-2xl text-[#0d3333] italic">dudas</p>
         <h2 className="mt-2 font-display text-4xl text-[#3d2916] md:text-6xl">Preguntas frecuentes</h2>
         <div className="mt-6 divide-y divide-forest/10">
@@ -681,46 +721,45 @@ function Preguntas() {
   );
 }
 
-function Cierre() {
-  return (
-    <section className="bg-[#eeedeb] text-[#3d2916]">
-      <div className="mx-auto grid max-w-6xl items-end md:grid-cols-[minmax(0,1.15fr)_minmax(220px,380px)]">
-        <Reveal className="px-5 py-16 md:py-20 md:pr-6 md:pl-8">
-          <h2 className="font-display text-4xl leading-[0.92] text-[#3d2916] md:text-6xl">
-            No necesitas tener todo resuelto para comenzar.
-          </h2>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-ink/80">
-            Solo necesitas dar el primer paso para conocer tus necesidades y empezar a construir hábitos con acompañamiento profesional.
-          </p>
-          <p className="mt-6 font-display text-3xl text-[#3d2916] italic">Estoy aquí para acompañarte.</p>
-          <p className="mt-2 text-sm text-[#3d2916]/70">— Mafer Cerquera</p>
-          <div className="mt-8">
-            <Pill href="#inscripcion" tone="pine">Quiero comenzar con Mafer</Pill>
-          </div>
-        </Reveal>
-        <figure className="mx-auto mb-12 w-[min(86%,300px)] -rotate-2 bg-[#fffdf8] p-2.5 pb-10 shadow-[0_18px_36px_rgba(13,51,51,0.16)] md:mx-0 md:mb-16 md:w-full md:max-w-[340px] md:justify-self-end md:p-3 md:pb-12">
-          <img
-            src="/media/acompanamiento-90-dias/cierre-mafe.png"
-            alt="Mafe Cerquera con una tabla de verduras"
-            width={550}
-            height={826}
-            className="block h-auto w-full"
-          />
-        </figure>
-      </div>
-    </section>
-  );
-}
-
-function Inscripcion() {
+function Inscripcion({ abierta, onClose }: { abierta: boolean; onClose: () => void }) {
   const [sent, setSent] = useState(false);
 
+  useEffect(() => {
+    if (!abierta) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [abierta, onClose]);
+
+  if (!abierta) return null;
+
   return (
-    <section id="inscripcion" className="scroll-mt-24 bg-[#eeedeb] px-5 py-16 text-[#3d2916] md:px-8 md:py-24">
-      <div className="mx-auto grid max-w-5xl gap-8 rounded-[2rem] bg-[#bec1f4] px-6 py-10 md:grid-cols-2 md:px-10">
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-[#3d2916]/55 px-4 py-8" onClick={onClose}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="inscripcion-titulo"
+        className="relative mx-auto grid w-full max-w-5xl gap-8 rounded-[2rem] bg-[#bec1f4] px-6 py-10 text-[#3d2916] md:grid-cols-2 md:px-10"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Cerrar"
+          className="absolute top-4 right-4 grid h-9 w-9 place-items-center rounded-full text-2xl leading-none text-[#0d3333]"
+        >
+          ×
+        </button>
         <div>
           <p className="font-display text-2xl text-[#0d3333] italic">inscripción</p>
-          <h2 className="mt-2 font-display text-4xl leading-[0.95] text-[#3d2916] md:text-5xl">
+          <h2 id="inscripcion-titulo" className="mt-2 font-display text-4xl leading-[0.95] text-[#3d2916] md:text-5xl">
             Cuéntame por dónde quieres empezar.
           </h2>
           <p className="mt-4 text-sm leading-relaxed text-ink/80">
@@ -789,6 +828,6 @@ function Inscripcion() {
           </form>
         )}
       </div>
-    </section>
+    </div>
   );
 }

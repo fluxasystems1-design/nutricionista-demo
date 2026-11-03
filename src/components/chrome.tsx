@@ -12,6 +12,7 @@ const tones = {
   berry: "!bg-[#bb3350] !text-[#f7f4ec] hover:!bg-[#9a2c44]",
   lilac: "!bg-[#bec1f4] !text-[#3d2916] hover:!bg-[#adb1ea]",
   pine: "!bg-[#0d3333] !text-[#cde1aa] hover:!bg-[#164444]",
+  black: "!bg-black !text-white hover:!bg-black",
 } as const;
 
 export function Pill({

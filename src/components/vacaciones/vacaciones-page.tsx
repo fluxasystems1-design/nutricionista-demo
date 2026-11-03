@@ -1,93 +1,50 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { PngSticker } from "@/components/png-sticker";
-import { Eyebrow, Header, Pill } from "@/components/chrome";
+import { Eyebrow, Header } from "@/components/chrome";
+import { Historias } from "@/components/home/home-page";
 import { Marquee, Reveal } from "@/components/motion";
-import { COHORT_START, INSTAGRAM, PRECIOS, ROUTES, TESTIMONIOS, TIKTOK, WHATSAPP } from "@/lib/site";
+import { COHORT_START, INSTAGRAM, ROUTES, TIKTOK, WHATSAPP } from "@/lib/site";
 
-const QUIZ = [
-  "Me inflamo apenas rompo mi rutina",
-  "Quiero sentir mi abdomen desinflamado en bikini o en la cena",
-  "Vuelvo sintiéndome peor que antes de salir",
-  "Todas las anteriores",
-];
-
-const ESCENAS = [
-  { icon: "🧳", text: "Vas a viajar y ya sabes cómo termina: hinchada, pesada, con la ropa que no cierra igual al tercer día." },
-  { icon: "🎉", text: "Te quedas en casa, pero cada celebración familiar es el mismo ciclo: comes con culpa, te inflamas y pasas la noche incómoda." },
-  { icon: "🔁", text: "Ya lo intentaste el año pasado y terminaste exactamente donde empezaste." },
-  { icon: "😔", text: "Te da miedo que este año sea igual." },
-  { icon: "📸", text: "Evitas las fotos familiares o de viaje porque no te sientes bien en tu cuerpo." },
-  { icon: "🤐", text: "Te aíslas de planes por miedo a cómo te vas a sentir después." },
-  { icon: "🧠", text: "Sientes que tu cuerpo te traiciona justo cuando más quieres disfrutar." },
-  { icon: "🗓️", text: "Ya te estás imaginando enero: otra vez “empezando de cero”." },
-];
-
-const SENALES = [
-  "Te despiertas liviana, pero para la tarde ya sientes el abdomen duro e hinchado.",
-  "Descartas la ropa que más te gusta porque “hoy no es un buen día de cuerpo”.",
-  "Pasas la noche calculando “cómo compensar” lo que comiste.",
-  "Llegas de un viaje más cansada de lo que saliste.",
-  "Evitas mirar tus fotos de la última vacación.",
-];
-
-const DIAS = [
-  "Reinicia tu digestión: base antiinflamatoria",
-  "Plan viajero y navideño: comer fuera sin culpa",
-  "Rutinas antiinflamatorias de movimiento (bono Natalia)",
-  "Mentalidad sin culpa: sesión en vivo",
-  "Sostener el cambio al volver y tu siguiente paso: cierre en vivo, con la presentación de Hazte Amiga de tus Hormonas",
-];
-
-const INCLUYE = [
-  "🥗 Protocolo Antiinflamatorio Portátil: guía diaria adaptable a viaje, playa o casa",
-  "🛒 Lista de Mercado Desinflamante",
-  "🎄 Recetas Navideñas Saludables",
-  "🥤 Recetario de Bebidas Antiinflamatorias",
-  "🧳 Plan Viajero Desinflamado",
-  "🏃‍♀️ Rutinas Antiinflamatorias de Movimiento (con Natalia)",
-  "🎥 Videos explicativos guiados",
-  "💬 Acompañamiento diario en grupo + 2 sesiones en vivo con Mafer",
-];
-
-const ADIOS = [
-  "Elegir entre disfrutar tus vacaciones o cuidar tu cuerpo",
-  "Volver sintiéndote peor que cuando saliste",
-  "Dietas que no sobreviven a una maleta o una cena familiar",
-  "Empezar “modo restricción” apenas terminan tus vacaciones",
-];
-
-const HOLA = [
-  "Herramientas simples que se adaptan a donde estés",
-  "Energía real para disfrutar cada día",
-  "Digestión ligera y menos inflamación, comas lo que comas",
-  "Sentir tu abdomen desinflamado y tonificado, sin que sea lo único que importe",
-  "Volver con continuidad y un siguiente paso claro, no con culpa",
-];
 
 export function VacacionesPage() {
+  const [listaAbierta, setListaAbierta] = useState(false);
+  const cerrarLista = useCallback(() => setListaAbierta(false), []);
+
+  useEffect(() => {
+    const abrir = (event: MouseEvent) => {
+      const link = (event.target as Element | null)?.closest?.('a[href="#lista"]');
+      if (!link) return;
+      event.preventDefault();
+      setListaAbierta(true);
+    };
+    document.addEventListener("click", abrir);
+    return () => document.removeEventListener("click", abrir);
+  }, []);
+
   return (
     <>
       <Header
         logoHref="#inicio"
         links={[
           { href: "#plan", label: "El plan" },
-          { href: "#voces", label: "Testimonios" },
+          { href: "#confian", label: "Testimonios" },
           { href: "#incluye", label: "Qué incluye" },
           { href: "#planes", label: "Planes" },
         ]}
-        cta={{ href: "#planes", label: "Quiero mi plan", tone: "berry" }}
+        cta={{ href: "#lista", label: "Quiero mi plan", tone: "black" }}
       />
       <main>
         <Hero />
+        <OfertaPlan />
         <div className="gals-type">
         <Marquee
           face="display"
           compact
           mark="★"
-          className="on-pink bg-[#f8e4e8] text-[#381018]"
+          className="bg-[#0d3333] text-[#d7ebc8]"
           items={[
             "Vacaciones sin restricción / disfruta",
             "Vacaciones sin restricción / sin culpa",
@@ -95,7 +52,8 @@ export function VacacionesPage() {
             "Vacaciones sin restricción / digestión ligera",
           ]}
         />
-        <ListaArriba />
+        <Identificacion />
+        <SeparadorFrase />
         <Promesa />
         <Marquee
           face="display"
@@ -108,36 +66,30 @@ export function VacacionesPage() {
             "digestión ligera",
           ]}
         />
-        <Quiz />
-        <Escenarios />
-        <Pilares />
-        <Reencuadre />
-        <Senales />
-        <Voces />
-        <Metodo />
+        <KitDigital />
+        <PlanDia />
+        <Historias id="confian" />
         <Marquee
           face="display"
           mark="★"
-          className="bg-[#0d3333] text-[#d7ebc8]"
+          className="bg-[#f8e4e8] text-[#381018]"
           items={[
-            "vive tus vacaciones completas",
-            "disfruta sin dejar de cuidarte",
-            "no es otra dieta de viaje",
-            "energía real, estés donde estés",
-            "5 días para sostener tu cuerpo",
-            "elige básico o vip",
+            "disfruta",
+            "sin culpa",
+            "sin restricción",
+            "energía real",
+            "digestión ligera",
           ]}
         />
-        <Planes />
-        <Agenda />
-        <Incluye />
-        <AdiosHola />
-        <Califica />
-        <ComoFunciona />
-        <Puente />
+        <BioMafe />
+        <OfertaPrincipal />
+        <Preguntas />
+        <Comunidad />
+        <CierreKit />
         </div>
       </main>
       <Pie />
+      <Lista abierta={listaAbierta} onClose={cerrarLista} />
     </>
   );
 }
@@ -208,21 +160,104 @@ function RedIcon({ name }: { name: "instagram" | "tiktok" | "whatsapp" }) {
   );
 }
 
-function ListaArriba() {
-  const [sent, setSent] = useState(false);
+function Identificacion() {
+  const items = [
+    {
+      title: "Comes diferente",
+      text: "Y terminas con sensación de pesadez o abdomen hinchado.",
+      image: "/media/vacaciones-sin-restriccion/imagenes/logo-comes.png",
+    },
+    {
+      title: "Sales de tu rutina",
+      text: "Y los viajes, las cenas y los cambios de horarios afectan tu bienestar.",
+      image: "/media/vacaciones-sin-restriccion/imagenes/logo-rutina.png",
+    },
+    {
+      title: "Empiezas de cero",
+      text: "Regresas de vacaciones pensando que necesitas otra dieta.",
+      image: "/media/vacaciones-sin-restriccion/imagenes/logo-cero.png",
+    },
+  ];
 
   return (
-    <section className="relative isolate overflow-hidden px-5 py-14 text-[#0d3333] md:py-16">
+    <section className="bg-[#f7f4ec] px-5 py-14 text-[#0d3333] md:px-8 md:py-20">
+      <div className="mx-auto max-w-5xl text-center">
+        <h2 className="mx-auto max-w-3xl font-display text-[2rem] leading-[0.95] md:text-5xl">
+          ¿Te identificas con alguna de estas situaciones?
+        </h2>
+        <div className="mt-10 grid gap-10 md:grid-cols-3 md:gap-8">
+          {items.map((item) => (
+            <article key={item.title}>
+              <img src={item.image} alt="" width={819} height={819} className="mx-auto h-28 w-28 object-contain md:h-32 md:w-32" />
+              <h3 className="mt-4 font-display text-2xl leading-none md:text-[1.7rem]">{item.title}</h3>
+              <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-[#0d3333]/80 md:text-base">{item.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SeparadorFrase() {
+  return (
+    <section className="relative overflow-hidden">
       <img
         src="/media/vacaciones-sin-restriccion/imagenes/lista-espera.jpg"
         alt=""
         width={1024}
         height={676}
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
+        className="absolute inset-0 h-full w-full object-cover object-center"
       />
-      <div className="relative mx-auto max-w-xl rounded-[2rem] bg-[#fffdf8]/90 px-6 py-10 text-center shadow-[0_18px_40px_rgba(13,51,51,0.16)] md:px-10">
+      <div className="relative flex min-h-[22rem] items-center justify-center px-5 py-14 md:min-h-[28rem] md:px-8">
+        <p className="w-full max-w-xl rounded-[1.75rem] bg-[#fffdf8]/90 px-6 py-8 text-center font-display text-[1.7rem] leading-[1.08] text-[#0d3333] shadow-[0_18px_40px_rgba(13,51,51,0.16)] md:px-10 md:py-10 md:text-[2.15rem]">
+          Cuidarte no debería significar dejar de disfrutar tus vacaciones.
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function Lista({ abierta, onClose }: { abierta: boolean; onClose: () => void }) {
+  const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    if (!abierta) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose();
+    };
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [abierta, onClose]);
+
+  if (!abierta) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-[#3d2916]/55 px-4 py-8" onClick={onClose}>
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="lista-titulo"
+        className="gals-type relative mx-auto w-full max-w-xl rounded-[2rem] bg-[#fffdf8] px-6 py-10 text-center text-[#0d3333] shadow-[0_18px_40px_rgba(13,51,51,0.16)] md:px-10"
+        onClick={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Cerrar"
+          className="absolute top-4 right-4 grid h-9 w-9 place-items-center rounded-full text-2xl leading-none text-[#0d3333]"
+        >
+          ×
+        </button>
         <p className="font-display text-2xl italic">Lista de espera</p>
-        <h2 className="mt-3 font-display text-4xl leading-[1.05] md:text-5xl">Vacaciones sin restricción</h2>
+        <h2 id="lista-titulo" className="mt-3 font-display text-4xl leading-[1.05] md:text-5xl">
+          Vacaciones sin restricción
+        </h2>
         <p className="mt-4 text-base leading-relaxed">
           Empieza en febrero 2027. Te avisamos primero cuando abran cupos. Quienes hagan el reto de noviembre tienen 15 % de descuento en el programa.
         </p>
@@ -272,7 +307,7 @@ function ListaArriba() {
         )}
         <p className="mt-4 text-sm">Acceso prioritario y aviso antes de que abran cupos.</p>
       </div>
-    </section>
+    </div>
   );
 }
 
@@ -350,20 +385,74 @@ function Hero() {
   );
 }
 
+function OfertaPlan() {
+  return (
+    <section className="gals-type bg-[#ede8e2] px-5 pt-2 pb-10 text-center text-[#0d3333] md:px-8 md:pb-14">
+      <div className="mx-auto max-w-xl">
+        <p className="text-[0.68rem] font-semibold tracking-[0.16em] uppercase">Tu plan digital de 5 días</p>
+        <h2 className="mt-3 font-display text-[2.15rem] leading-[0.95] md:text-5xl">Vacaciones sin Restricciones</h2>
+        <p className="mt-3 text-[0.95rem] leading-relaxed text-[#0d3333]/80 md:text-base">
+          ¿Quieres sentir tu abdomen menos inflamado estas vacaciones? Descubre cómo organizar tu alimentación, cuidar tu digestión y complementar tus hábitos con movimiento, sin dejar de disfrutar tus comidas favoritas.
+        </p>
+        <p className="mt-5 flex items-baseline justify-center gap-3">
+          <span className="font-display text-4xl leading-none md:text-5xl">USD 14</span>
+          <span className="text-sm text-[#0d3333]/70">Pago único</span>
+        </p>
+        <a
+          href="#lista"
+          className="mt-5 inline-flex items-center gap-2 rounded-full bg-black px-6 py-3.5 text-sm font-semibold tracking-[0.06em] text-white uppercase"
+        >
+          Quiero mi plan desinflamante
+          <span aria-hidden>→</span>
+        </a>
+        <p className="mt-4 text-sm text-[#0d3333]/60">Programa digital · Alimentación + movimiento</p>
+      </div>
+    </section>
+  );
+}
+
 function Promesa() {
   return (
     <section className="relative z-10 bg-[#0d3333] text-[#d7ebc8]">
-      <div className="mx-auto grid max-w-6xl items-end gap-4 px-5 pt-12 md:grid-cols-[minmax(0,1.05fr)_minmax(260px,440px)] md:px-8 md:pt-10">
+      <PngSticker src="/stickers/fresa.png" className="top-10 right-1 hidden w-24 min-[1400px]:block" rotate={16} />
+      <div className="relative z-[3] mx-auto grid max-w-6xl items-end gap-4 px-5 pt-12 md:grid-cols-[minmax(0,1.05fr)_minmax(260px,440px)] md:items-start md:px-8 md:pt-10">
         <Reveal>
-          <p className="font-display text-3xl leading-snug italic md:text-5xl">
-            Energía real, digestión ligera y un abdomen desinflamado para tus vacaciones, sin tener que elegir entre disfrutar y cuidarte.
+          <p className="font-display text-3xl leading-[0.95] italic md:text-5xl">
+            Un plan que se adapta a tus vacaciones. No al revés.
           </p>
-          <p className="mt-6 text-lg leading-relaxed text-[#d7ebc8]/80">
-            5 días para sostener tu cuerpo en cualquier vacación: viaje, playa, familia o fiesta.
+          <p className="mt-5 text-base leading-relaxed text-[#d7ebc8]/80 md:text-lg">
+            Durante cinco días aprenderás a construir comidas equilibradas, incorporar hábitos digestivos y mantenerte activa con ejercicios prácticos.
           </p>
-          <div className="mt-8">
-            <Pill href="#planes">Quiero mi plan de vacaciones</Pill>
-          </div>
+          <p className="mt-3 font-display text-[1.7rem] leading-none italic text-[#f4f7ef]">
+            Sin dietas extremas. Sin rutinas imposibles.
+          </p>
+          <ul className="mt-5 grid gap-3 lg:grid-cols-3 lg:gap-4">
+            <li>
+              <p className="text-sm font-semibold text-[#f4f7ef]">Alimentación flexible</p>
+              <p className="mt-0.5 text-sm leading-snug text-[#d7ebc8]/75">
+                Comidas prácticas y opciones para adaptar tu menú.
+              </p>
+            </li>
+            <li>
+              <p className="text-sm font-semibold text-[#f4f7ef]">Bienestar digestivo</p>
+              <p className="mt-0.5 text-sm leading-snug text-[#d7ebc8]/75">
+                Hábitos para ayudarte a manejar molestias habituales de hinchazón.
+              </p>
+            </li>
+            <li>
+              <p className="text-sm font-semibold text-[#f4f7ef]">Movimiento</p>
+              <p className="mt-0.5 text-sm leading-snug text-[#d7ebc8]/75">
+                Ejercicios sencillos que puedes integrar durante las vacaciones.
+              </p>
+            </li>
+          </ul>
+          <a
+            href="#lista"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-black px-6 py-3.5 text-sm font-semibold tracking-[0.06em] text-white uppercase"
+          >
+            Empezar mi plan
+            <span aria-hidden>→</span>
+          </a>
         </Reveal>
         <div className="relative z-10 -mb-16">
           <p className="pointer-events-none absolute top-[12%] left-[6%] z-20 -rotate-8 font-display text-xl text-[#f8bad1] italic md:top-[14%] md:left-[8%] md:text-3xl">
@@ -382,593 +471,307 @@ function Promesa() {
   );
 }
 
-function Quiz() {
-  const [choice, setChoice] = useState<string | null>(null);
-
-  return (
-    <section className="relative overflow-hidden on-pink bg-[#f8e4e8] px-5 py-16 text-forest md:px-8 md:py-24">
-      <PngSticker
-        src="/stickers/hoja.png"
-        className="-right-10 -bottom-14 w-48 md:w-64"
-        rotate={-12}
-      />
-      <PngSticker src="/stickers/tomates.png" className="top-2 -left-8 w-24 md:left-0 md:w-48" rotate={8} delay={0.08} />
-      <div className="relative z-10 mx-auto max-w-3xl">
-        <Reveal>
-          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-            <Eyebrow>Quiz</Eyebrow>
-            <p className="font-display text-2xl text-[#b03040] italic">Elige una opción</p>
-          </div>
-          <h2 className="mt-3 font-display text-3xl text-forest md:text-5xl">
-            ¿Qué es lo que más te preocupa de tus próximas vacaciones?
-          </h2>
-        </Reveal>
-        <div className="mt-8 grid gap-3">
-          {QUIZ.map((option) => {
-            const active = choice === option;
-            return (
-              <button
-                key={option}
-                type="button"
-                onClick={() => setChoice(option)}
-                className={`rounded-[1.3rem] px-5 py-4 text-left text-sm font-medium transition-transform md:text-base ${
-                  active
-                    ? "scale-[1.01] bg-[#0d3333] text-[#d7ebc8]"
-                    : "bg-paper text-forest hover:-translate-y-0.5"
-                }`}
-              >
-                {option}
-              </button>
-            );
-          })}
-        </div>
-        <AnimatePresence>
-          {choice ? (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="mt-6 grid gap-3 md:grid-cols-2"
-            >
-              <a href="#planes" className="rounded-[1.4rem] bg-butter p-5">
-                <p className="font-display text-2xl text-forest italic">Ver el reto de 5 días</p>
-                <p className="mt-2 text-sm leading-relaxed text-forest/80">
-                  Empieza el 23 de noviembre y desbloquea 15 % de descuento en el programa de febrero.
-                </p>
-              </a>
-              <a
-                href={`${ROUTES.hormonas}#lista`}
-                className="rounded-[1.4rem] bg-paper p-5 ring-1 ring-forest/10"
-              >
-                <p className="font-display text-2xl text-forest italic">Solo quiero la lista de espera</p>
-                <p className="mt-2 text-sm leading-relaxed text-forest/80">
-                  Te avisamos primero cuando abra Hazte Amiga de tus Hormonas.
-                </p>
-              </a>
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
-      </div>
-    </section>
-  );
-}
-
-function Escenarios() {
-  const reduce = useReducedMotion();
-  const columns = [ESCENAS.slice(0, 4), ESCENAS.slice(4)];
-  const delays = [
-    [0, 0.05, 0.2, 0.15],
-    [0, 0.05, 0.1, 0.2],
+function KitDigital() {
+  const piezas = [
+    { src: "/media/vacaciones-sin-restriccion/imagenes/logo-alimentacion.png", title: "Plan de alimentación", text: "5 días de comidas flexibles." },
+    { src: "/media/vacaciones-sin-restriccion/imagenes/logo-recetario.png", title: "Recetario de vacaciones", text: "Preparaciones fáciles y prácticas." },
+    { src: "/media/vacaciones-sin-restriccion/imagenes/logo-sustituciones.png", title: "Guía de sustituciones", text: "Alternativas para organizar tus platos." },
+    { src: "/media/vacaciones-sin-restriccion/imagenes/logo-ejercicios.png", title: "Plan de ejercicios", text: "Rutinas sencillas para moverte donde estés." },
+    { src: "/media/vacaciones-sin-restriccion/imagenes/logo-comer.png", title: "Guía para comer fuera", text: "Herramientas para restaurantes y celebraciones." },
+    { src: "/media/vacaciones-sin-restriccion/imagenes/logo-checklist.png", title: "Checklist digestivo", text: "Hábitos y registro de bienestar." },
   ];
 
   return (
-    <section className="relative overflow-hidden bg-[#0d3333] px-5 py-16 text-[#d7ebc8] md:px-8 md:py-24">
-      <PngSticker src="/stickers/hoja-salvia.png" className="-top-6 -left-16 w-64 md:-top-8 md:-left-20 md:w-[24rem]" rotate={-14} />
-      <PngSticker src="/stickers/hoja-roble.png" className="-top-4 -right-14 w-72 md:-top-6 md:-right-16 md:w-[28rem]" rotate={8} delay={0.05} />
-      <PngSticker src="/stickers/hoja-roble.png" className="top-[18%] -left-20 w-56 md:-left-24 md:w-[22rem]" rotate={-8} delay={0.1} flip />
-      <PngSticker src="/stickers/hoja-salvia.png" className="top-[22%] -right-16 w-56 md:-right-20 md:w-[22rem]" rotate={16} delay={0.14} flip />
-      <PngSticker src="/stickers/hoja-salvia.png" className="top-[48%] -left-14 w-52 md:-left-16 md:w-72" rotate={12} delay={0.18} />
-      <PngSticker src="/stickers/hoja-roble.png" className="top-[52%] -right-16 w-56 md:-right-20 md:w-80" rotate={-6} delay={0.2} />
-      <PngSticker src="/stickers/hoja-roble.png" className="-bottom-8 -left-16 w-60 md:-bottom-10 md:-left-20 md:w-[22rem]" rotate={18} delay={0.24} flip />
-      <PngSticker src="/stickers/hoja-salvia.png" className="-bottom-6 -right-14 w-64 md:-bottom-8 md:-right-16 md:w-[24rem]" rotate={-10} delay={0.28} flip />
-      <div className="relative z-10 mx-auto max-w-6xl">
+    <section id="incluye" className="scroll-mt-24 bg-[#f7f4ec] px-5 py-14 text-[#0d3333] md:px-8 md:py-20">
+      <div className="mx-auto max-w-5xl">
         <Reveal>
-          <p className="font-display text-2xl text-olive italic">¿te suena?</p>
-          <h2 className="mt-2 max-w-3xl font-display text-4xl leading-[0.95] md:text-6xl">
-            ¿Te reconoces en alguno de estos escenarios?
+          <h2 className="text-center font-display text-[2.1rem] leading-[0.95] md:text-5xl">
+            Todo lo que recibes por USD 14
           </h2>
         </Reveal>
-        <div className="mt-10 grid items-start gap-3 md:grid-cols-2 md:gap-x-8">
-          {columns.map((col, colIndex) => (
-            <ul key={colIndex} className="space-y-3">
-              {col.map((item, i) => (
-                <motion.li
-                  key={item.text}
-                  initial={reduce ? false : { opacity: 0, x: colIndex === 0 ? "-100%" : "100%" }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-                  transition={{ duration: 0.6, delay: delays[colIndex][i], ease: [0.25, 0.1, 0.25, 1] }}
-                  className="flex items-start gap-3 rounded-[1.35rem] bg-white px-5 py-4 shadow-[0_8px_22px_rgba(13,51,51,0.08)]"
-                >
-                  <span className="font-display text-2xl leading-none text-olive italic">0{colIndex * 4 + i + 1}</span>
-                  <span className="text-sm leading-relaxed text-ink md:text-base">{item.text}</span>
-                </motion.li>
-              ))}
-            </ul>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Pilares() {
-  const items = [
-    "Protocolo Antiinflamatorio Portátil",
-    "Movimiento sin Gimnasio",
-    "Mentalidad sin Culpa",
-  ];
-  const tilt = ["md:-rotate-2", "md:rotate-1 md:translate-y-8", "md:rotate-2"];
-  return (
-    <section id="plan" className="relative scroll-mt-24 overflow-hidden on-pink bg-[#f8e4e8] text-forest">
-      <div aria-hidden className="field-lines pointer-events-none absolute inset-0" />
-      <PngSticker src="/stickers/flor.png" className="-top-8 right-6 w-24 md:w-36" rotate={16} />
-      <div className="relative mx-auto max-w-6xl px-5 py-20 md:px-8 md:py-28">
-        <Reveal>
-          <p className="text-center text-[0.72rem] font-semibold tracking-[0.28em] uppercase">El plan de 5 días</p>
-          <p className="mx-auto mt-5 max-w-4xl text-center font-display text-3xl leading-snug italic md:text-5xl">
-            Olvida la idea de que “cuidarte” y “disfrutar” son cosas distintas. Un plan de 5 días diseñado para mujeres que quieren vivir sus vacaciones completas, sin pagar la cuenta con su cuerpo después.
-          </p>
-        </Reveal>
-        <div className="mt-14 grid items-start gap-5 md:grid-cols-3">
-          {items.map((item, i) => (
-            <article key={item} className={`bg-paper px-6 py-7 shadow-[0_18px_40px_rgba(74,39,19,0.12)] ${tilt[i]}`}>
-              <p className="font-display text-5xl text-olive italic">0{i + 1}</p>
-              <h3 className="mt-3 font-display text-2xl leading-tight italic">{item}</h3>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Reencuadre() {
-  return (
-    <section className="relative overflow-hidden py-20 text-[#f7f4ec] md:py-28">
-      <img
-        src="/media/vacaciones-sin-restriccion/imagenes/lista-espera.jpg"
-        alt=""
-        width={1024}
-        height={676}
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover object-center"
-      />
-      <div aria-hidden className="absolute inset-0 bg-[#0d3333]/88" />
-      <p
-        aria-hidden
-        className="pointer-events-none absolute top-1/2 left-[-10vw] z-[1] -translate-y-1/2 font-display text-[18vw] leading-none whitespace-nowrap text-[#f7f4ec]/10 italic select-none md:left-[-2.5vw] md:text-[12vw]"
-      >
-        sin culpa
-      </p>
-      <Reveal className="relative z-10 mx-auto max-w-3xl px-5 md:px-8">
-        <h2 className="font-display text-4xl md:text-5xl">¿Te suena familiar?</h2>
-        <p className="mt-4 text-lg leading-relaxed">
-          Comes bien todo el año, pero tus vacaciones te inflaman igual. No es que te falte fuerza de voluntad. Es que nadie te ha dado una estrategia que se adapte a TU cuerpo cuando tu rutina cambia. Tu cuerpo no te está traicionando: se está protegiendo.
-        </p>
-        <div className="mt-8">
-          <Pill href="#planes">Quiero vivir mis vacaciones sin restricción</Pill>
-        </div>
-      </Reveal>
-    </section>
-  );
-}
-
-function Senales() {
-  return (
-    <section className="relative overflow-hidden on-pink bg-[#f8e4e8] text-forest">
-      <div className="relative mx-auto grid max-w-6xl gap-10 px-5 py-20 md:grid-cols-[0.8fr_1.2fr] md:px-8 md:py-28">
-        <Reveal>
-          <p className="font-display text-2xl italic">sin culpa</p>
-          <h2 className="mt-2 font-display text-5xl leading-[0.92] italic md:text-7xl">¿Te sientes así?</h2>
-        </Reveal>
-        <Reveal delay={0.08}>
-          <ol className="space-y-5">
-            {SENALES.map((item, i) => (
-              <li key={item} className="grid grid-cols-[auto_1fr] gap-4 border-b border-forest/15 pb-5">
-                <span className="font-display text-2xl italic">0{i + 1}</span>
-                <span className="text-base leading-relaxed">{item}</span>
-              </li>
-            ))}
-          </ol>
-          <p className="mt-8 font-display text-3xl italic">
-            Si te identificaste con más de una, no es casualidad.
-          </p>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function Voces() {
-  const [index, setIndex] = useState(0);
-  useEffect(() => {
-    const id = window.setInterval(() => setIndex((v) => (v + 1) % TESTIMONIOS.length), 5200);
-    return () => window.clearInterval(id);
-  }, []);
-
-  return (
-    <section id="voces" className="scroll-mt-24 overflow-hidden bg-[#0d3333] px-5 py-16 text-[#d7ebc8] md:px-8 md:py-24">
-      <div className="mx-auto grid max-w-6xl items-center gap-10 md:grid-cols-[0.7fr_1.3fr]">
-        <div>
-          <Eyebrow light>Testimonios</Eyebrow>
-          <h2 className="mt-3 font-display text-3xl leading-tight md:text-4xl">
-            Se sentían igual que tú. Esto es lo que cuentan ahora.
-          </h2>
-        </div>
-        <div className="relative">
-          <PngSticker src="/stickers/limon.png" className="-top-8 -right-4 w-20 md:w-28" rotate={18} />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -top-3 left-10 z-10 h-7 w-28 -rotate-6 bg-[repeating-linear-gradient(-18deg,#d5d6f8_0_8px,#bec1f4_8px_9px)] shadow-[0_8px_14px_rgba(74,39,19,0.12)]"
-          />
-          <AnimatePresence mode="wait">
-            <motion.blockquote
-              key={index}
-              initial={{ opacity: 0, rotate: -2, y: 16 }}
-              animate={{ opacity: 1, rotate: -1.5, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="bg-paper px-7 py-8 shadow-[0_22px_50px_rgba(74,39,19,0.14)]"
-            >
-              <p className="font-display text-5xl leading-none text-olive italic">“</p>
-              <p className="font-display text-2xl leading-snug text-forest italic md:text-3xl">
-                {TESTIMONIOS[index]}
-              </p>
-            </motion.blockquote>
-          </AnimatePresence>
-          <div className="mt-6 flex gap-2 pl-4">
-            {TESTIMONIOS.map((_, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label={`Testimonio ${i + 1}`}
-                onClick={() => setIndex(i)}
-                className={`h-2.5 rounded-full ${i === index ? "w-8 bg-[#d7ebc8]" : "w-2.5 bg-[#d7ebc8]/30"}`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Metodo() {
-  return (
-    <section className="relative overflow-hidden on-pink bg-[#f8e4e8] text-forest">
-      <PngSticker src="/stickers/palta.png" className="right-2 bottom-0 w-28 md:right-10 md:w-44" rotate={12} />
-      <div className="relative mx-auto max-w-5xl px-5 py-20 md:px-8 md:py-28">
-        <Reveal>
-          <p className="font-display text-2xl text-olive italic">el método</p>
-          <h2 className="mt-3 max-w-4xl font-display text-5xl leading-[0.92] md:text-7xl">
-            Método Vacaciones sin restricción
-          </h2>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-forest/80">
-            No es otra dieta que abandonas en el primer viaje. Es sostener tu cuerpo en medio del caos real de tus vacaciones, sin elegir entre disfrutar y cuidarte.
-          </p>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function Agenda() {
-  const tilt = ["-rotate-2", "rotate-1", "-rotate-1", "rotate-2", "-rotate-1"];
-  const tape = ["bg-[#d7ebc8]", "bg-[#f8bad1]", "bg-[#e4f48a]", "bg-[#d7ebc8]", "bg-[#f8bad1]"];
-
-  return (
-    <section className="relative overflow-hidden bg-[#0d3333] px-5 py-10 text-[#d7ebc8] md:px-8 md:py-12">
-      <PngSticker src="/stickers/hoja-salvia.png" className="-top-8 -left-16 w-52 md:-left-20 md:w-72" rotate={-16} />
-      <PngSticker src="/stickers/hoja-roble.png" className="-top-6 -right-16 w-56 md:-right-20 md:w-80" rotate={12} delay={0.06} />
-      <PngSticker src="/stickers/hoja-roble.png" className="top-[30%] -left-20 w-44 md:w-60" rotate={-8} delay={0.1} flip />
-      <PngSticker src="/stickers/hoja-salvia.png" className="top-[28%] -right-16 w-44 md:w-60" rotate={14} delay={0.14} flip />
-      <PngSticker src="/stickers/hoja-roble.png" className="-bottom-10 -left-14 w-48 md:w-64" rotate={18} delay={0.18} flip />
-      <PngSticker src="/stickers/hoja-salvia.png" className="-bottom-8 -right-14 w-52 md:w-72" rotate={-12} delay={0.22} />
-      <div className="relative z-10 mx-auto grid max-w-6xl items-center gap-6 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] md:gap-8">
-        <div className="flex items-center gap-3">
-          <p aria-hidden className="shrink-0 font-display text-[7.5rem] leading-[0.72] text-olive italic">
-            5
-          </p>
-          <h2 className="font-display text-2xl leading-[1.05] italic md:text-4xl">
-            <span className="sr-only">5 </span>
-            días contigo: guía de cada día, dos sesiones en vivo con Mafer.
-          </h2>
-        </div>
-        <ol className="grid grid-cols-2 gap-3 pt-2 lg:grid-cols-6">
-          {DIAS.map((item, i) => (
-            <li
-              key={item}
-              className={`relative bg-[#fffdf8] px-3 pt-4 pb-3 shadow-[0_10px_16px_rgba(0,0,0,0.22)] lg:col-span-2 ${i === 3 ? "lg:col-start-2" : ""} ${tilt[i]}`}
-            >
-              <span aria-hidden className={`absolute -top-1.5 left-1/2 h-3 w-9 -translate-x-1/2 ${tape[i]}`} />
-              <span
-                aria-hidden
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(90deg, transparent 0.65rem, rgba(187,51,80,0.5) 0.65rem, rgba(187,51,80,0.5) calc(0.65rem + 1.5px), transparent calc(0.65rem + 1.5px)), repeating-linear-gradient(to bottom, transparent 0 1.2rem, rgba(61,41,22,0.14) 1.2rem calc(1.2rem + 1px))",
-                  backgroundRepeat: "no-repeat, repeat",
-                  backgroundPosition: "0 0, 0 1.45rem",
-                }}
-              />
-              <div className="relative pl-3">
-                <p className="font-display text-2xl leading-none text-[#7a8a3c] italic">0{i + 1}</p>
-                <p className="mt-0.5 font-display text-base leading-tight text-[#3d2916] italic">{item}</p>
-              </div>
+        <img
+          src="/media/vacaciones-sin-restriccion/imagenes/kit-digital.jpg"
+          alt="Mafe presenta el kit digital de Vacaciones sin restricción, con el plan, el recetario y las guías en el teléfono, la tablet y el computador."
+          width={1024}
+          height={768}
+          className="mt-8 h-auto w-full"
+        />
+        <ul className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-3">
+          {piezas.map((item) => (
+            <li key={item.title} className="rounded-[1.4rem] bg-[#fffdf8] px-3 py-4 md:px-5 md:py-5">
+              <img src={item.src} alt="" width={160} height={160} className="mx-auto mb-3 block h-20 w-auto max-w-full object-contain md:h-28" />
+              <p className="font-semibold">{item.title}</p>
+              <p className="mt-1 text-sm leading-snug text-[#0d3333]/70">{item.text}</p>
             </li>
           ))}
-        </ol>
+        </ul>
+        <div className="mt-8 text-center">
+          <a
+            href="#lista"
+            className="inline-flex items-center gap-2 rounded-full bg-black px-6 py-3.5 text-sm font-semibold tracking-[0.06em] text-white uppercase"
+          >
+            Quiero mi kit de vacaciones
+            <span aria-hidden>→</span>
+          </a>
+        </div>
       </div>
     </section>
   );
 }
 
-function OneLine({ text }: { text: string }) {
-  const box = useRef<HTMLSpanElement>(null);
-  const label = useRef<HTMLSpanElement>(null);
-  const reduce = useReducedMotion();
-  const [shift, setShift] = useState(0);
+const PLAN_DIAS = [
+  {
+    titulo: "Empieza por tu digestión",
+    texto: "Identifica hábitos cotidianos que pueden influir en tu sensación de inflamación.",
+  },
+  {
+    titulo: "Plan de alimentación",
+    texto: "5 días de comidas flexibles.",
+  },
+  {
+    titulo: "Recetario de vacaciones",
+    texto: "Preparaciones fáciles y prácticas.",
+  },
+  {
+    titulo: "Plan de ejercicios",
+    texto: "Rutinas sencillas para moverte donde estés.",
+  },
+  {
+    titulo: "Guía para comer fuera",
+    texto: "Herramientas para restaurantes y celebraciones.",
+  },
+];
 
-  useEffect(() => {
-    const measure = () => {
-      if (!box.current || !label.current) return;
-      setShift(Math.max(0, label.current.scrollWidth - box.current.clientWidth));
-    };
-    measure();
-    window.addEventListener("resize", measure);
-    return () => window.removeEventListener("resize", measure);
-  }, [text]);
+const PREGUNTAS = [
+  {
+    q: "¿Es una dieta estricta?",
+    a: "No. Es un plan flexible para organizar tu alimentación en vacaciones, sin dietas extremas ni rutinas imposibles.",
+  },
+  {
+    q: "¿Los ejercicios requieren gimnasio?",
+    a: "No. Son rutinas sencillas que puedes integrar donde estés.",
+  },
+  {
+    q: "¿Voy a tener el abdomen plano en cinco días?",
+    a: "No. Este plan no promete bajar de talla en cinco días. Te da herramientas para cuidar tu digestión mientras disfrutas.",
+  },
+  {
+    q: "¿Puedo hacerlo si no viajo?",
+    a: "Sí. Sirve en un viaje, en casa o en una celebración.",
+  },
+  {
+    q: "¿Cómo accedo al programa?",
+    a: "Es un programa digital. Al unirte recibes el acceso al contenido para consultarlo y adaptarlo a tu rutina.",
+  },
+  {
+    q: "¿Reemplaza una consulta nutricional?",
+    a: "No. No reemplaza una consulta nutricional ni un tratamiento médico.",
+  },
+];
+
+function PlanDia() {
+  const [dia, setDia] = useState(0);
+  const actual = PLAN_DIAS[dia];
 
   return (
-    <span ref={box} className="block min-w-0 flex-1 overflow-hidden">
-      <motion.span
-        ref={label}
-        className="inline-block whitespace-nowrap text-base font-bold leading-none tracking-tight text-[#1a1210]"
-        animate={shift > 0 && !reduce ? { x: [0, -shift, 0] } : { x: 0 }}
-        transition={
-          shift > 0 && !reduce
-            ? { duration: Math.max(5, shift / 36), repeat: Infinity, ease: "linear", repeatDelay: 1.1 }
-            : { duration: 0 }
-        }
-      >
-        {text}
-      </motion.span>
-    </span>
+    <section id="plan" className="relative scroll-mt-24 overflow-hidden bg-[#0d3333] px-5 py-14 text-[#f4f7ef] md:px-8 md:py-20">
+      <PngSticker src="/stickers/hoja-salvia.png" className="-top-10 -left-16 w-52 md:-left-20 md:w-72" rotate={-16} />
+      <PngSticker src="/stickers/hoja-roble.png" className="-top-8 -right-16 w-56 md:-right-20 md:w-80" rotate={12} delay={0.06} />
+      <PngSticker src="/stickers/hoja-higuera.png" className="-bottom-12 -left-14 w-48 md:w-64" rotate={18} delay={0.12} flip />
+      <PngSticker src="/stickers/hoja.png" className="-bottom-10 -right-14 w-52 md:w-72" rotate={-12} delay={0.16} />
+      <div className="relative z-[3] mx-auto max-w-3xl">
+        <h2 className="text-center font-display text-[2.1rem] leading-[0.95] text-[#f4f7ef] md:text-5xl">Tu plan, día a día.</h2>
+        <div className="mt-8 rounded-[1.6rem] bg-[#fffdf8] p-3 text-[#0d3333] md:p-5">
+          <div className="grid grid-cols-5 gap-1.5">
+            {PLAN_DIAS.map((item, index) => (
+              <button
+                key={item.titulo}
+                type="button"
+                aria-pressed={dia === index}
+                onClick={() => setDia(index)}
+                className={`rounded-full px-1 py-2 text-center text-xs font-semibold whitespace-nowrap md:px-3 md:text-sm ${
+                  dia === index ? "bg-[#0d3333] text-[#f4f7ef]" : "bg-[#e7f0e4] text-[#0d3333]"
+                }`}
+              >
+                Día {index + 1}
+              </button>
+            ))}
+          </div>
+          <div className="px-2 pt-6 pb-3 md:px-4">
+            <p className="text-xs font-semibold tracking-[0.16em] uppercase">Día {dia + 1}</p>
+            <h3 className="mt-2 font-display text-2xl md:text-3xl">{actual.titulo}</h3>
+            <p className="mt-2 text-base leading-relaxed text-[#0d3333]/75">{actual.texto}</p>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
-function Incluye() {
-  const reduce = useReducedMotion();
-  const items = INCLUYE.map((item) => {
-    const match = item.match(/^(\S+)\s+([\s\S]+)$/);
-    return match ? { icon: match[1], text: match[2] } : { icon: "", text: item };
-  });
-  const [per, setPer] = useState(2);
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const slides: (typeof items)[] = [];
-  for (let i = 0; i < items.length; i += per) slides.push(items.slice(i, i + per));
-  const safe = index % slides.length;
+function BioMafe() {
+  return (
+    <section className="relative bg-[#f7f4ec] px-5 py-14 md:px-8 md:py-20">
+      <PngSticker src="/stickers/flor.png" className="top-3 left-0 w-16 md:top-6 md:left-2 md:w-28" rotate={-16} />
+      <PngSticker src="/stickers/limon.png" className="top-4 right-0 w-14 md:top-8 md:right-2 md:w-24" rotate={18} delay={0.08} />
+      <PngSticker src="/stickers/granada.png" className="bottom-3 right-1 w-16 md:bottom-6 md:right-4 md:w-28" rotate={-12} delay={0.14} />
+      <div className="relative z-[1] mx-auto max-w-xl rounded-[1.8rem] bg-[#e7f0e4] px-4 pt-6 pb-2 shadow-[0_16px_36px_rgba(13,51,51,0.12)] md:flex md:max-w-5xl md:items-center md:gap-8 md:px-8 md:py-10">
+        <div className="md:w-[46%] md:shrink-0">
+          <div className="relative -rotate-2 rounded-[1.15rem] bg-[#fffdf8] p-2.5 shadow-[0_18px_34px_rgba(13,51,51,0.18)] md:p-3">
+            <span
+              aria-hidden
+              className="pointer-events-none absolute -top-3 left-8 z-10 h-7 w-24 -rotate-3 bg-[repeating-linear-gradient(-18deg,#f7f4ec_0_8px,#d9d3c8_8px_9px)] shadow-[0_8px_14px_rgba(61,41,22,0.12)]"
+            />
+            <img
+              src="/media/hazte-amiga-de-tus-hormonas/imagenes/mafe-historia.png"
+              alt="Mafe Cerquera"
+              width={942}
+              height={820}
+              className="h-auto w-full rounded-[0.7rem]"
+            />
+          </div>
+        </div>
+        <div className="px-2 py-8 text-[#0d3333] md:flex md:flex-1 md:flex-col md:justify-center md:px-2 md:py-4">
+          <h2 className="font-display text-[2.15rem] leading-[1.02] md:text-5xl">Hola, soy Mafe Cerquera.</h2>
+          <p className="mt-3 text-base font-semibold md:text-lg">Nutricionista funcional y digestiva.</p>
+          <p className="mt-4 text-base leading-relaxed md:text-lg">
+            Creo en una alimentación que se adapte a tu vida y a tus necesidades, sin restricciones extremas.
+          </p>
+          <p className="mt-4 text-base leading-relaxed md:text-lg">
+            Creé Vacaciones sin Restricciones para compartir herramientas prácticas que te permitan cuidar tu digestión, mantenerte activa y disfrutar más tus vacaciones.
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 768px)");
-    const apply = () => setPer(mq.matches ? 2 : 1);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
-
-  useEffect(() => {
-    if (reduce || paused) return;
-    const id = window.setInterval(() => setIndex((v) => v + 1), 3200);
-    return () => window.clearInterval(id);
-  }, [reduce, paused]);
+function OfertaPrincipal() {
+  const incluye = [
+    "Plan de alimentación flexible de cinco días",
+    "Recetas y guías prácticas",
+    "Guía para comer en vacaciones",
+    "Plan de ejercicios y movilidad",
+    "Checklist de bienestar digestivo",
+    "Acceso digital al contenido",
+  ];
 
   return (
-    <section id="incluye" className="relative scroll-mt-24 overflow-hidden bg-[#ede8e2] px-5 py-16 text-[#381018] md:px-8 md:py-24">
-      <PngSticker src="/stickers/tenedor.png" className="-right-8 top-2 w-28 md:-right-6 md:top-4 md:w-[22rem]" rotate={-8} />
-      <div className="relative z-10 mx-auto max-w-6xl">
-        <div className="text-center">
-          <h2 className="font-display text-5xl md:text-6xl">Qué incluye</h2>
-          <p className="mt-3 font-display text-2xl text-[#b03040] italic">te llevas</p>
-        </div>
-        <div
-          className="relative mt-10 h-16 overflow-hidden"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
+    <section id="planes" className="scroll-mt-24 bg-[#f7f4ec] px-5 py-14 text-[#0d3333] md:px-8 md:py-20">
+      <div className="mx-auto max-w-xl rounded-[1.8rem] bg-[#0d3333] px-6 py-8 text-[#f4f7ef] md:px-10 md:py-10">
+        <p className="text-xs font-semibold tracking-[0.16em] uppercase">Tu programa digital</p>
+        <h2 className="mt-3 font-display text-3xl leading-[0.95] md:text-5xl">Vacaciones sin Restricciones</h2>
+        <p className="mt-4 flex items-baseline gap-3">
+          <span className="font-display text-4xl">USD 14</span>
+          <span className="text-sm text-[#f4f7ef]/70">Pago único</span>
+        </p>
+        <div className="my-6 h-px bg-[#f4f7ef]/20" />
+        <p className="font-semibold">Incluye:</p>
+        <ul className="mt-3 grid gap-2">
+          {incluye.map((item) => (
+            <li key={item} className="flex gap-2 text-sm leading-snug">
+              <span aria-hidden>✓</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
+        <p className="mt-6 text-sm leading-relaxed text-[#f4f7ef]/75">
+          Herramientas que puedes consultar y adaptar a tu rutina, incluso después de los cinco días.
+        </p>
+        <a
+          href="#lista"
+          className="mt-6 flex items-center justify-center rounded-full bg-[#f4f7ef] px-6 py-3.5 text-sm font-semibold tracking-[0.06em] text-[#0d3333] uppercase"
         >
-          <AnimatePresence initial={false}>
-            <motion.ul
-              key={`${per}-${safe}`}
-              initial={reduce ? false : { x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-              className="absolute inset-0 grid grid-cols-1 items-center gap-3 md:grid-cols-2 md:gap-5"
-            >
-              {slides[safe].map((item, col) => {
-                const lime = (safe + col) % 2 === 0;
-                return (
-                  <li
-                    key={item.text}
-                    className={`flex h-16 w-full min-w-0 items-center gap-3 overflow-hidden rounded-full border-2 border-[#1a1210] px-5 ${lime ? "bg-[#e4f48a]" : "bg-[#ffc2dc]"}`}
-                  >
-                    <span className="shrink-0 text-lg leading-none" aria-hidden>
-                      {item.icon}
-                    </span>
-                    <OneLine text={item.text} />
-                  </li>
-                );
-              })}
-            </motion.ul>
-          </AnimatePresence>
-        </div>
-        <div className="mt-5 flex justify-center gap-2">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              type="button"
-              aria-label={`Grupo ${i + 1}`}
-              onClick={() => setIndex(i)}
-              className={`h-2.5 rounded-full ${i === safe ? "w-8 bg-[#381018]" : "w-2.5 bg-[#381018]/30"}`}
-            />
+          Empezar ahora
+        </a>
+        <p className="mt-3 text-center text-xs text-[#f4f7ef]/60">Pago seguro · Sin suscripción mensual</p>
+      </div>
+    </section>
+  );
+}
+
+function Preguntas() {
+  const [open, setOpen] = useState(0);
+
+  return (
+    <section id="preguntas" className="bg-[#f7f4ec] px-5 py-14 text-[#0d3333] md:px-8 md:py-20">
+      <div className="mx-auto max-w-3xl">
+        <h2 className="font-display text-4xl leading-[0.95] md:text-5xl">Preguntas frecuentes</h2>
+        <div className="mt-6 divide-y divide-[#0d3333]/15 rounded-[1.4rem] border border-[#0d3333]/15 bg-[#fffdf8] px-5">
+          {PREGUNTAS.map((item, index) => (
+            <div key={item.q}>
+              <button
+                type="button"
+                className="flex w-full items-center justify-between gap-4 py-4 text-left text-base font-semibold"
+                aria-expanded={open === index}
+                onClick={() => setOpen(open === index ? -1 : index)}
+              >
+                {item.q}
+                <span aria-hidden className="text-2xl leading-none">
+                  {open === index ? "–" : "+"}
+                </span>
+              </button>
+              {open === index ? <p className="pb-4 text-sm leading-relaxed text-[#0d3333]/75">{item.a}</p> : null}
+            </div>
           ))}
         </div>
-        <p className="mt-8 text-center font-display text-2xl italic">
-          Bono: Body Sculpt Challenge, Abdomen Tonificado (Natalia Galvis)
+      </div>
+    </section>
+  );
+}
+
+function Comunidad() {
+  return (
+    <section className="relative overflow-hidden">
+      <img
+        src="/media/vacaciones-sin-restriccion/imagenes/separador-playa.jpg"
+        alt=""
+        width={1280}
+        height={720}
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
+      <div className="relative flex min-h-[26rem] items-center justify-center px-5 py-14 md:min-h-[32rem] md:px-8">
+      <div className="w-full max-w-xl rounded-[1.6rem] bg-[#e7f0e4]/92 px-6 py-8 text-[#0d3333] shadow-[0_18px_40px_rgba(13,51,51,0.16)] md:px-10">
+        <p className="text-xs font-semibold tracking-[0.16em] uppercase">¿Aún no quieres comprar?</p>
+        <h2 className="mt-3 font-display text-3xl leading-[0.95] md:text-4xl">Empieza gratis en mi comunidad.</h2>
+        <p className="mt-3 max-w-2xl text-base leading-relaxed text-[#0d3333]/80">
+          Un espacio para mujeres que quieren aprender a cuidar su alimentación, comprender mejor su digestión y construir hábitos sostenibles.
         </p>
-      </div>
-    </section>
-  );
-}
-
-function AdiosHola() {
-  const reduce = useReducedMotion();
-  const columns = [
-    {
-      kicker: "suelta",
-      title: "Dile adiós a",
-      items: ADIOS,
-      from: "-100%",
-      delays: [0, 0.05, 0.2, 0.15],
-      className: "bg-[#0d3333] px-6 py-16 text-[#d7ebc8] md:px-12 md:py-24",
-      kickerClass: "text-butter",
-    },
-    {
-      kicker: "quédate",
-      title: "Dile hola a",
-      items: HOLA,
-      from: "100%",
-      delays: [0, 0.05, 0.1, 0.2, 0.15],
-      className: "on-pink bg-[#f8e4e8] px-6 py-16 text-forest md:px-12 md:py-24",
-      kickerClass: "text-olive",
-    },
-  ];
-
-  return (
-    <section className="grid overflow-hidden md:grid-cols-2">
-      {columns.map((col) => (
-        <div key={col.title} className={col.className}>
-          <p className={`font-display text-2xl italic ${col.kickerClass}`}>{col.kicker}</p>
-          <h2 className="mt-2 font-display text-5xl italic md:text-6xl">{col.title}</h2>
-          <ul className="mt-8 space-y-3">
-            {col.items.map((item, i) => (
-              <motion.li
-                key={item}
-                initial={reduce ? false : { opacity: 0, x: col.from }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true, margin: "0px 0px -80px 0px" }}
-                transition={{ duration: 0.6, delay: col.delays[i], ease: [0.25, 0.1, 0.25, 1] }}
-                className="flex items-start gap-3 rounded-[1.35rem] bg-white px-5 py-4 shadow-[0_8px_22px_rgba(13,51,51,0.08)]"
-              >
-                <span className="font-display text-2xl leading-none text-[#b2bb68] italic">0{i + 1}</span>
-                <span className="text-sm leading-relaxed text-[#3d2916] md:text-base">{item}</span>
-              </motion.li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </section>
-  );
-}
-
-function Califica() {
-  return (
-    <section className="bg-[#0d3333] text-[#d7ebc8]">
-      <div className="relative isolate overflow-hidden px-5 py-16 md:px-8 md:pt-24 md:pb-20">
-        <img
-          src="/media/vacaciones-sin-restriccion/imagenes/separador-playa.jpg"
-          alt=""
-          width={1280}
-          height={720}
-          className="pointer-events-none absolute inset-0 h-full w-full object-cover object-[center_52%]"
-        />
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-[#0d3333]/64 via-[#0d3333]/48 to-[#0d3333]" />
-        <div className="relative mx-auto grid max-w-6xl items-start gap-8 md:grid-cols-2">
-          <article className="bg-paper p-8 shadow-[0_18px_40px_rgba(13,51,51,0.28)] md:rotate-1">
-            <p className="font-display text-2xl text-olive italic">sí</p>
-            <h2 className="mt-2 font-display text-4xl text-forest italic md:text-5xl">Es para ti si</h2>
-            <p className="mt-4 text-base leading-relaxed text-ink/80">
-              Quieres herramientas reales para sostener tu cuerpo en tus vacaciones, sin dietas extremas ni renunciar a disfrutar.
-            </p>
-          </article>
-          <article className="on-pink bg-[#f8e4e8] p-8 text-forest shadow-[0_18px_40px_rgba(13,51,51,0.28)] md:-rotate-1 md:translate-y-8">
-            <p className="font-display text-2xl italic">todavía no</p>
-            <h2 className="mt-2 font-display text-4xl text-forest italic md:text-5xl">Probablemente no es para ti si</h2>
-            <p className="mt-4 text-base leading-relaxed text-ink/80">
-              Buscas bajar de talla en 5 días, o esperas que esto reemplace tu tratamiento médico.
-            </p>
-          </article>
-        </div>
-      </div>
-      <p className="mx-auto max-w-6xl px-5 pb-14 text-sm leading-relaxed text-[#d7ebc8] md:px-8 md:pb-16">
-        ¿Este reto no es lo tuyo ahora? Hazte Amiga de tus Hormonas empieza en febrero.{" "}
-        <a href={`${ROUTES.hormonas}#lista`} className="font-semibold underline underline-offset-4">
-          Unirme a la lista de espera
+        <a
+          href={WHATSAPP}
+          target="_blank"
+          rel="noreferrer"
+          className="mt-6 flex items-center justify-center rounded-full border border-[#0d3333] px-6 py-3.5 text-sm font-semibold tracking-[0.06em] uppercase"
+        >
+          Unirme gratis
         </a>
-      </p>
-    </section>
-  );
-}
-
-function Planes() {
-  const cards = [
-    {
-      name: "Básico",
-      price: PRECIOS.vacacionesBasico.cop,
-      note: `COP · ${PRECIOS.vacacionesBasico.eur}`,
-      text: "Protocolo completo, 5 días de acompañamiento grabado, todos los bonos y 2 sesiones grupales en vivo.",
-      href: `${ROUTES.gracias}?plan=basico`,
-      cta: "Quiero mi plan Básico",
-    },
-    {
-      name: "VIP · 1:1",
-      price: PRECIOS.vacacionesVip.cop,
-      note: `COP · ${PRECIOS.vacacionesVip.eur}`,
-      text: "Todo lo del Básico, más 1 sesión personalizada 1:1 con Mafer para ajustar el protocolo a tu caso.",
-      href: `${ROUTES.gracias}?plan=vip`,
-      cta: "Quiero mi plan VIP",
-    },
-  ];
-
-  return (
-    <section id="planes" className="scroll-mt-24 bg-[#ede8e2] px-5 py-16 text-[#381018] md:px-8 md:py-24">
-      <div className="mx-auto grid max-w-5xl items-stretch gap-5 md:grid-cols-2">
-        {cards.map((card) => (
-          <article
-            key={card.name}
-            className="flex flex-col rounded-[1.75rem] border border-[#0d3333]/20 bg-white px-8 py-10 text-center"
-          >
-            <h3 className="font-display text-3xl tracking-tight uppercase">{card.name}</h3>
-            <p className="mt-6 font-price text-5xl text-[#bb3350] sm:text-6xl">{card.price}</p>
-            <p className="mt-2 text-sm font-semibold tracking-[0.16em] uppercase">{card.note}</p>
-            <p className="mt-6 text-base leading-relaxed">{card.text}</p>
-            <div className="mt-auto pt-8">
-              <Pill href={card.href} className="w-full">
-                {card.cta}
-              </Pill>
-            </div>
-          </article>
-        ))}
       </div>
-      <p className="mx-auto mt-8 max-w-5xl text-center text-sm">
-        ¿Aún no estás lista para el reto?{" "}
-        <a href={`${ROUTES.hormonas}#lista`} className="font-semibold underline underline-offset-4">
-          Unirme a la lista de espera
-        </a>
-      </p>
+      </div>
     </section>
   );
 }
+
+function CierreKit() {
+  return (
+    <section className="bg-[#f7f4ec] px-5 pb-16 md:px-8 md:pb-24">
+      <div className="mx-auto max-w-3xl rounded-[1.6rem] bg-[#0d3333] px-6 py-10 text-center text-[#f4f7ef] md:px-10">
+        <h2 className="font-display text-2xl leading-snug md:text-4xl">
+          Disfruta tus vacaciones. Cuida tu digestión. Muévete a tu ritmo.
+        </h2>
+        <p className="mt-3 text-base text-[#f4f7ef]/75">
+          Cinco días de herramientas prácticas para cuidarte sin dietas extremas.
+        </p>
+        <p className="mt-5 font-display text-4xl">USD 14</p>
+        <a
+          href="#lista"
+          className="mt-6 inline-flex items-center justify-center rounded-full bg-[#f4f7ef] px-8 py-3.5 text-sm font-semibold tracking-[0.06em] text-[#0d3333] uppercase"
+        >
+          Empezar ahora
+        </a>
+      </div>
+    </section>
+  );
+}
+
 
 function Countdown({
   onForest = false,
@@ -1047,60 +850,5 @@ function FlipNum({
         </motion.span>
       </AnimatePresence>
     </span>
-  );
-}
-
-function ComoFunciona() {
-  const steps = [
-    "Elige tu plan (Básico o VIP)",
-    "Entras al grupo de acompañamiento desde el día 1",
-    "Empieza tu reto, estés donde estés",
-  ];
-  const tilt = ["md:-rotate-1", "md:rotate-1 md:translate-y-5", "md:-rotate-2"];
-  return (
-    <section className="overflow-hidden on-pink bg-[#f8e4e8] px-5 py-16 text-forest md:px-8">
-      <div className="mx-auto max-w-6xl">
-        <p className="font-display text-2xl text-olive italic">en tres pasos</p>
-        <h2 className="mt-2 font-display text-5xl text-forest italic md:text-6xl">Cómo funciona</h2>
-        <ol className="mt-12 grid items-start gap-6 md:grid-cols-3">
-          {steps.map((step, i) => (
-            <li key={step} className={`relative bg-paper px-6 pt-10 pb-7 shadow-[0_16px_36px_rgba(74,39,19,0.1)] ${tilt[i]}`}>
-              <span className="absolute -top-5 left-5 font-display text-5xl text-olive italic">0{i + 1}</span>
-              <p className="font-display text-2xl leading-snug text-forest italic">{step}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="mt-10">
-          <Pill href="#planes">Empezar mis vacaciones sin restricción</Pill>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Puente() {
-  return (
-    <section className="grid bg-[#ede8e2] text-[#381018] md:grid-cols-2">
-      <div className="px-6 py-16 md:px-12 md:py-24">
-        <p className="font-display text-2xl italic">febrero</p>
-        <h2 className="mt-2 font-display text-5xl italic md:text-6xl">
-          ¿Y después de tus vacaciones, qué?
-        </h2>
-      </div>
-      <div className="px-6 py-16 md:px-12 md:py-24">
-        <p className="max-w-md text-lg leading-relaxed">
-          Estos 5 días son el primer paso. Hazte Amiga de tus Hormonas, que empieza en febrero 2027, es el siguiente.
-        </p>
-        <p className="mt-4 max-w-md text-lg leading-relaxed">
-          Quienes hagan el reto de noviembre tienen 15 % de descuento en el programa.
-        </p>
-        <div className="mt-8">
-          <Pill href={`${ROUTES.hormonas}#lista`}>Unirme a la lista de espera</Pill>
-        </div>
-        <p className="mt-3 text-sm text-[#381018]/70">
-          Acceso prioritario y aviso antes de que abran cupos.
-        </p>
-      </div>
-    </section>
   );
 }

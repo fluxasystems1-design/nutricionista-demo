@@ -97,7 +97,7 @@ function CarruselEnfoque() {
     if (reduce || paused) return;
     const id = window.setInterval(() => {
       setIndex((current) => (current + 1) % ENFOQUE.length);
-    }, 4500);
+    }, 2600);
     return () => window.clearInterval(id);
   }, [reduce, paused]);
 
@@ -741,7 +741,7 @@ function useMarqueeSpeed(trackRef: { current: HTMLDivElement | null }, reduce: b
   }, [reduce, trackRef]);
 }
 
-function RielTestimonios() {
+export function RielTestimonios() {
   const reduce = useReducedMotion();
   const trackRef = useRef<HTMLDivElement>(null);
   useMarqueeSpeed(trackRef, reduce);
@@ -767,7 +767,7 @@ function RielTestimonios() {
   );
 }
 
-function RielHistorias() {
+export function RielHistorias() {
   const reduce = useReducedMotion();
   const railRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -819,9 +819,9 @@ function RielHistorias() {
   );
 }
 
-function Historias() {
+export function Historias({ id = "voces" }: { id?: string }) {
   return (
-    <section id="voces" className="relative scroll-mt-24 overflow-hidden bg-[#e2d5e8] px-5 pt-6 pb-12 md:px-8 md:pt-10 md:pb-16">
+    <section id={id} className="relative scroll-mt-24 overflow-hidden bg-[#e2d5e8] px-5 pt-6 pb-12 md:px-8 md:pt-10 md:pb-16">
       <div className="relative z-[3] mx-auto flex max-w-6xl items-center justify-between gap-3">
         <Reveal>
           <h2 className="font-display text-4xl leading-[0.95] text-[#0d3333] md:text-6xl">
